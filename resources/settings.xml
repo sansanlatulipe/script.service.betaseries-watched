@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <category label="30000">
+        <setting label="30010" type="select" id="bs_auth_mode" lvalues="30011|30012" default="30011" />
+        <setting label="30020" type="text" id="bs_login" visible="eq(-1,30012)" />
+        <setting label="30030" type="text" id="bs_password" visible="eq(-2,30012)" option="hidden" />
+        <setting label="30040" type="action" action="RunScript(script.service.betaseries-watched,authentication)" />
+    </category>
+    <category label="31000">
+        <setting label="31010" type="bool" id="sync_movies" default="true" />
+        <setting label="31020" type="bool" id="sync_tvshows" default="false" enable="false" />
+        <setting label="31030" type="bool" id="notify_mail" default="false" />
+        <setting label="31040" type="bool" id="notify_twitter" default="false" />
+        <setting label="31050" type="bool" id="update_profile" default="false" />
+    </category>
+</settings>
