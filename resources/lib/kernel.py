@@ -22,7 +22,7 @@ def authenticate():
 
 
 def _authenticationDialog(addon, device):
-    Dialog().textviewer(
+    Dialog().ok(
         addon.getLocalizedString(20000).encode('utf-8'),
         addon.getLocalizedString(20001).format(
             device['verification_url'],

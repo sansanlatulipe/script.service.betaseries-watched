@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.service.betaseries-read" name="Synchronization with Betaseries" version="0.0.1~beta" provider-name="SansanLaTulipe">
+<addon id="script.service.betaseries-watched" name="Synchronization with Betaseries" version="0.0.1-alpha4" provider-name="SansanLaTulipe">
 	<requires>
 		<import addon="xbmc.python" version="2.26.0" />
 		<import addon="script.module.simplecache" version="1.0.14" />
 	</requires>
 
-	<extension point="xbmc.service" library="service.py" />
-	<extension point="xbmc.python.script" library="addon.py">
-		<provides>executable</provides>
-	</extension>
+	<extension point="xbmc.python.script" library="addon.py" />
+	<!-- <extension point="xbmc.service" library="service.py" /> -->
+
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en_GB">Synchronization with Betaseries</summary>
 		<summary lang="fr_FR">Synchronisation avec Betaseries</summary>
 		<description lang="en_GB">This service automatically updates your profile on Betaseries when you have finished watching an episode or a movie on Kodi</description>
 		<description lang="fr_FR">Ce service met à jour automatiquement votre profil sur le site Betaseries lorsque vous venez de finir de regarder un épisode ou nu film dans Kodi</description>
 		<platform>all</platform>
-		<language>fr</language>
 		<license>GPL-2.0-or-later</license>
 		<source>https://github.com/SansanLaTulipe/kodi-betaseries/script.service.betaseries-watched</source>
 		<news>

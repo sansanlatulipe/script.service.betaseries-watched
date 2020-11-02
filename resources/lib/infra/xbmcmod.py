@@ -30,7 +30,11 @@ except ImportError:
             }
 
         def getAddonInfo(self, key):
-            return 'addon.fake'
+            if key == 'id':
+                return 'addon.fake'
+            if key == 'path':
+                return '.'
+            return None
 
         def getSetting(self, key):
             return self.settings[key]
@@ -42,6 +46,9 @@ try:
     from xbmcgui import Dialog
 except ImportError:
     class Dialog:
+        def ok(self, heading, text, usemono=False):
+            print(heading, ' > ', text)
+
         def textviewer(self, heading, text, usemono=False):
             print(heading, ' > ', text)
 

@@ -13,10 +13,10 @@ from resources.lib.service import movie
 
 class Container:
     def __init__(self):
-        self.config = pymod.ConfigParser()
-        self.config.read('resources/data/config.ini')
-        self.addon = xbmcmod.Addon()
         self.singletons = {}
+        self.addon = xbmcmod.Addon()
+        self.config = pymod.ConfigParser()
+        self.config.read(self.addon.getAddonInfo('path') + '/resources/data/config.ini')
 
     def get(self, service):
         if service not in self.singletons:

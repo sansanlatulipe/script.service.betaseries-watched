@@ -5,28 +5,28 @@ class MovieRepository:
     def retrieveById(self, movieId):
         response = self.jsonrpc.call(
             'VideoLibrary.GetMovieDetails',
-            {'uniqueid': movieId},
-            ['tmdb_id', 'playcount']
+            {'movieid': movieId},
+            ['uniqueid', 'playcount']
         )
-        return self._buildEntity(response)
+        return self._buildEntity(response['result']['moviedetails'])
 
-    def retrieveByTmdbId(self, tmdbId):
+    def retrieveAll(self):
         response = self.jsonrpc.call(
-            'VideoLibrary.GetMovieDetails',
-            {'tmdb_id': tmdbId},
-            ['uniqueid', 'tmdb_id', 'playcount']
+            'VideoLibrary.GetMovies',
+            {},
+            ['uniqueid', 'playcount']
         )
-        return self._buildEntity(response)
-
-    def retrieveAllIds(self):
-        response = self.jsonrpc.call('VideoLibrary.GetMovies')
         return list(map(
-            lambda movie: movie['movieid'],
+            self._buildEntity,
             response['result']['movies']
         ))
 
     def retrieveUpdatedIdsFrom(self, endpoint, limit=100):
-        response = self.jsonrpc.call('VideoLibrary.GetRecentlyAddedMovies')
+        response = self.jsonrpc.call(
+            'VideoLibrary.GetRecentlyAddedMovies',
+            {},
+            ['dateadded']
+        )
         return list(map(
             lambda event: {
                 'movieId': event['movieid'],
@@ -44,11 +44,9 @@ class MovieRepository:
             }
         )
 
-    def _buildEntity(self, response):
-        if 'uniqueid' not in response['result']['moviedetails']:
-            return None
+    def _buildEntity(self, data):
         return {
-            'id': response['result']['moviedetails']['movieid'],
-            'tmdbId': response['result']['moviedetails']['tmdb_id'],
-            'isWatched': response['result']['moviedetails']['playcount'] > 0
+            'id': data['movieid'],
+            'tmdbId': data['uniqueid']['tmdb'],
+            'isWatched': data['playcount'] > 0
         }
