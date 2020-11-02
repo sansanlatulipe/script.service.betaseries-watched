@@ -1,8 +1,7 @@
 name: Code analysis
 
 on:
-  push:
-    paths: [ '**/*.py' ]
+  - push
 
 jobs:
   build:
