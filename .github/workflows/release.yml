@@ -8,7 +8,7 @@ on:
 env:
   addon_name: script.service.betaseries-watched
   addon_version: ${{ github.ref }}
-  asset_name: ${{ addon_name }}_${{ addon_version }}
+  asset_name: ${{ env.addon_name }}_${{ env.addon_version }}
 
 jobs:
   build:
@@ -48,6 +48,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ asset_name }}.zip
-          asset_name: ${{ asset_name }}.zip
+          asset_path: ./${{ env.asset_name }}.zip
+          asset_name: ${{ env.asset_name }}.zip
           asset_content_type: application/zip
