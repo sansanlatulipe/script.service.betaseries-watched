@@ -8,13 +8,10 @@ on:
 env:
   addon_name: script.service.betaseries-watched
   addon_version: ${{ github.ref }}
-  asset_name: ${{ env.addon_name }}_${{ env.addon_version }}
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -30,7 +27,7 @@ jobs:
           mkdir .${addon_name}
           cp -r * .${addon_name}
           mv .${addon_name} ${addon_name}
-          zip -r ${asset_name}.zip ${addon_name}
+          zip -r ${addon_name}_${addon_version}.zip ${addon_name}
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
@@ -48,6 +45,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ env.asset_name }}.zip
-          asset_name: ${{ env.asset_name }}.zip
+          asset_path: ./${{ addon_name }}_${{ addon_version }}.zip
+          asset_name: ${{ addon_name }}_${{ addon_version }}.zip
           asset_content_type: application/zip
