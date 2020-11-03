@@ -27,13 +27,12 @@ class MovieRepository:
             {},
             ['dateadded']
         )
-        return list(map(
-            lambda event: {
+        return [
+            {
                 'movieId': event['movieid'],
                 'endpoint': event['dateadded']
-            },
-            response['result']['movies']
-        ))
+            } for event in response['result']['movies'][::-1]
+        ]
 
     def updateWatchedStatus(self, movieId, isWatched):
         self.jsonrpc.call(

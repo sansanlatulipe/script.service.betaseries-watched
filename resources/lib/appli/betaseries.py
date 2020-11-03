@@ -38,13 +38,12 @@ class MovieRepository:
             params['since_id'] = endpoint
 
         response = self.http.call('GET', '/timeline/member?' + pymod.urlencode(params))
-        return list(map(
-            lambda event: {
+        return [
+            {
                 'movieId': event['ref_id'],
                 'endpoint': event['id']
-            },
-            response['events'][::-1]
-        ))
+            } for event in response['events'][::-1]
+        ]
 
     def updateWatchedStatus(self, movieId, isWatched):
         self.http.call(
