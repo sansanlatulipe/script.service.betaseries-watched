@@ -21,32 +21,28 @@ class Container:
             self.singletons[service] = getattr(self, initializer)()
         return self.singletons[service]
 
+    def _initAddon(self):
+        return xbmcmod.Addon()
+
     def _initAuthentication(self):
         return authentication.Authentication(
             self.get('betaseries.bearer.repository')
         )
 
-    def _initMovieWatch(self):
-        return movie.WatchSynchro(
+    def _initBetaseriesBearerRepository(self):
+        return appliBetaseries.BearerRepository(
             self.get('cache.repository'),
-            self.get('kodi.movie.repository'),
-            self.get('betaseries.movie.repository')
+            self.get('betaseries.http')
         )
 
-    def _initKodiMovieRepository(self):
-        return appliKodi.MovieRepository(
-            self.get('kodi.jsonrpc')
+    def _initBetaseriesHttp(self):
+        return infraBetaseries.Http(
+            self.settings.getBetaseriesApiKey()
         )
 
     def _initBetaseriesMovieRepository(self):
         return appliBetaseries.MovieRepository(
             self.settings.getBetaseriesNotifications(),
-            self.get('betaseries.http')
-        )
-
-    def _initBetaseriesBearerRepository(self):
-        return appliBetaseries.BearerRepository(
-            self.get('cache.repository'),
             self.get('betaseries.http')
         )
 
@@ -59,10 +55,14 @@ class Container:
     def _initKodiJsonrpc(self):
         return infraKodi.JsonRPC()
 
-    def _initBetaseriesHttp(self):
-        return infraBetaseries.Http(
-            self.settings.getBetaseriesApiKey()
+    def _initKodiMovieRepository(self):
+        return appliKodi.MovieRepository(
+            self.get('kodi.jsonrpc')
         )
 
-    def _initAddon(self):
-        return xbmcmod.Addon()
+    def _initMovieWatch(self):
+        return movie.WatchSynchro(
+            self.get('cache.repository'),
+            self.get('kodi.movie.repository'),
+            self.get('betaseries.movie.repository')
+        )

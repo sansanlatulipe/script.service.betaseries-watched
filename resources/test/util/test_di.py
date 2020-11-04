@@ -18,6 +18,7 @@ class ContainerShould(unittest.TestCase):
 
     def test_contain_the_following_services(self):
         services = [
+            'addon',
             'authentication',
             'betaseries.bearer.repository',
             'betaseries.http',
