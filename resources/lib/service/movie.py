@@ -7,8 +7,8 @@ class WatchSynchro:
     def scanAll(self):
         self._initializeEndpoint()
         for kodiMovie in self.kodiRepo.retrieveAll():
-            bsMovie = self.bsRepo.retrieveByTmdbId(kodiMovie['tmdbId'])
-            self._synchronizeEntities(kodiMovie, bsMovie, None)
+            bsMovie = self.bsRepo.retrieveByTmdbId(kodiMovie.get('tmdbId'))
+            self._synchronizeEntities(kodiMovie, bsMovie, source=None)
 
     def scanRecentlyUpdated(self):
         kodiMovies = self.kodiRepo.retrieveAll()
@@ -19,9 +19,9 @@ class WatchSynchro:
         endpoint = self.cacheRepo.getKodiEndpoint()
 
         for event in self.kodiRepo.retrieveUpdatedIdsFrom(endpoint):
-            endpoint = event['endpoint']
-            kodiMovie = self._retrieveById(kodiMovies, event['movieId'])
-            bsMovie = self.bsRepo.retrieveByTmdbId(kodiMovie['tmdbId'])
+            endpoint = event.get('endpoint')
+            kodiMovie = self._retrieveById(kodiMovies, event.get('movieId'))
+            bsMovie = self.bsRepo.retrieveByTmdbId(kodiMovie.get('tmdbId'))
             self._synchronizeEntities(kodiMovie, bsMovie, source='kodi')
 
         self.cacheRepo.setKodiEndpoint(endpoint)
@@ -30,42 +30,38 @@ class WatchSynchro:
         endpoint = self.cacheRepo.getBetaseriesEndpoint()
 
         for event in self.bsRepo.retrieveUpdatedIdsFrom(endpoint):
-            endpoint = event['endpoint']
-            bsMovie = self.bsRepo.retrieveById(event['movieId'])
-            kodiMovie = self._retrieveByTmdbId(kodiMovies, bsMovie['tmdbId'])
+            endpoint = event.get('endpoint')
+            bsMovie = self.bsRepo.retrieveById(event.get('movieId'))
+            kodiMovie = self._retrieveByTmdbId(kodiMovies, bsMovie.get('tmdbId'))
             self._synchronizeEntities(kodiMovie, bsMovie, source='betaseries')
 
         self.cacheRepo.setBetaseriesEndpoint(endpoint)
 
     def _synchronizeEntities(self, kodiMovie, bsMovie, source):
-        if kodiMovie is None or bsMovie is None:
+        if not kodiMovie or not bsMovie or kodiMovie.get('isWatched') == bsMovie.get('isWatched'):
             pass
-        elif source == 'kodi' and kodiMovie['isWatched'] != bsMovie['isWatched']:
-            self.bsRepo.updateWatchedStatus(bsMovie['id'], kodiMovie['isWatched'])
-        elif source == 'betaseries' and kodiMovie['isWatched'] != bsMovie['isWatched']:
-            self.kodiRepo.updateWatchedStatus(kodiMovie['id'], bsMovie['isWatched'])
-        elif kodiMovie['isWatched'] and not bsMovie['isWatched']:
-            self.bsRepo.updateWatchedStatus(bsMovie['id'], True)
-        elif bsMovie['isWatched'] and not kodiMovie['isWatched']:
-            self.kodiRepo.updateWatchedStatus(kodiMovie['id'], True)
+        elif source == 'kodi' or source is None and kodiMovie.get('isWatched'):
+            self.bsRepo.updateWatchedStatus(bsMovie.get('id'), kodiMovie.get('isWatched'))
+        elif source == 'betaseries' or source is None and bsMovie.get('isWatched'):
+            self.kodiRepo.updateWatchedStatus(kodiMovie.get('id'), bsMovie.get('isWatched'))
 
     def _initializeEndpoint(self):
         events = self.kodiRepo.retrieveUpdatedIdsFrom(None, 1)
         if events:
-            self.cacheRepo.setKodiEndpoint(events[0]['endpoint'])
+            self.cacheRepo.setKodiEndpoint(events[0].get('endpoint'))
 
         events = self.bsRepo.retrieveUpdatedIdsFrom(None, 1)
         if events:
-            self.cacheRepo.setBetaseriesEndpoint(events[0]['endpoint'])
+            self.cacheRepo.setBetaseriesEndpoint(events[0].get('endpoint'))
 
     def _retrieveById(self, movies, movieId):
         return next(
-            (movie for movie in movies if movie['id'] == movieId),
+            (movie for movie in movies if movie.get('id') == movieId),
             None
         )
 
     def _retrieveByTmdbId(self, movies, tmdbId):
         return next(
-            (movie for movie in movies if movie['tmdbId'] == tmdbId),
+            (movie for movie in movies if movie.get('tmdbId') == tmdbId),
             None
         )

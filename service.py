@@ -1,4 +1,5 @@
-from resources.lib import kernel
+from resources.lib.launcher import Launcher
 
 if __name__ == '__main__':
-    kernel.fromLastCheckpoint()
+    launcher = Launcher()
+    launcher.fromLastCheckpoint()

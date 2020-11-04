@@ -1,8 +1,9 @@
 import sys
-from resources.lib import kernel
+from resources.lib.launcher import Launcher
 
 if __name__ == '__main__':
+    launcher = Launcher()
     if len(sys.argv) > 1 and sys.argv[1] == 'authentication':
-        kernel.authenticate()
+        launcher.authenticate()
     else:
-        kernel.fromScratch()
+        launcher.fromScratch()

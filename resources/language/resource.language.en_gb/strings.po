@@ -27,57 +27,37 @@ msgstr ""
 "and enter the code {1}"
 
 msgctxt "#30000"
-msgid "Settings Betaseries connection"
-msgstr "Betaseries connection"
+msgid "Settings"
+msgstr "General"
 
 msgctxt "#30010"
-msgid "Settings Betaseries connection mode"
-msgstr "Connection type"
-
-msgctxt "#30011"
-msgid "Settings Betaseries device mode"
-msgstr "With an external device"
-
-msgctxt "#30012"
-msgid "Settings Betaseries credentials mode"
-msgstr "With login and password"
-
-msgctxt "#30020"
-msgid "Settings Betaseries login"
-msgstr "Login"
-
-msgctxt "#30030"
-msgid "Settings Betaseries password"
-msgstr "Password"
-
-msgctxt "#30040"
 msgid "Settings Betaseries connection"
 msgstr "Initialize the connection"
 
 msgctxt "#31000"
-msgid "Settings notifications"
-msgstr "Betaseries notifications"
-
-msgctxt "#31010"
-msgid "Settings notify by e-mail"
-msgstr "Send an email when updates are done"
-
-msgctxt "#31020"
-msgid "Settings notify on Twitter"
-msgstr "Share updates on Twitter"
-
-msgctxt "#31030"
-msgid "Settings notify on profile"
-msgstr "Display updates on your profile"
-
-msgctxt "#32000"
 msgid "Settings synchronization"
 msgstr "Synchronization"
 
-msgctxt "#32010"
+msgctxt "#31010"
 msgid "Settings synchronize movies"
 msgstr "Synchronize movies"
 
-msgctxt "#32020"
+msgctxt "#31020"
 msgid "Settings synchronize TV shows"
 msgstr "Synchronize TV shows"
+
+msgctxt "#32000"
+msgid "Settings notifications"
+msgstr "Betaseries notifications"
+
+msgctxt "#32010"
+msgid "Settings notify by e-mail"
+msgstr "Send an email when updates are done"
+
+msgctxt "#32020"
+msgid "Settings notify on Twitter"
+msgstr "Share updates on Twitter"
+
+msgctxt "#32030"
+msgid "Settings notify on profile"
+msgstr "Display updates on your profile"

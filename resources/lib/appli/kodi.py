@@ -8,7 +8,7 @@ class MovieRepository:
             {'movieid': movieId},
             ['uniqueid', 'playcount']
         )
-        return self._buildEntity(response['result']['moviedetails'])
+        return self._buildEntity(response.get('result', {}).get('moviedetails'))
 
     def retrieveAll(self):
         response = self.jsonrpc.call(
@@ -18,7 +18,7 @@ class MovieRepository:
         )
         return list(map(
             self._buildEntity,
-            response['result']['movies']
+            response.get('result').get('movies')
         ))
 
     def retrieveUpdatedIdsFrom(self, endpoint, limit=100):
@@ -29,9 +29,9 @@ class MovieRepository:
         )
         return [
             {
-                'movieId': event['movieid'],
-                'endpoint': event['dateadded']
-            } for event in response['result']['movies'][::-1]
+                'movieId': event.get('movieid'),
+                'endpoint': event.get('dateadded')
+            } for event in response.get('result').get('movies')[::-1]
         ]
 
     def updateWatchedStatus(self, movieId, isWatched):
@@ -43,9 +43,11 @@ class MovieRepository:
             }
         )
 
-    def _buildEntity(self, data):
+    def _buildEntity(self, movie):
+        if not movie:
+            return None
         return {
-            'id': data['movieid'],
-            'tmdbId': data['uniqueid']['tmdb'],
-            'isWatched': data['playcount'] > 0
+            'id': movie.get('movieid'),
+            'tmdbId': movie.get('uniqueid').get('tmdb'),
+            'isWatched': movie.get('playcount') > 0
         }

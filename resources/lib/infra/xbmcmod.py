@@ -22,8 +22,8 @@ except ImportError:
     class Addon:
         def __init__(self):
             self.settings = {
-                'bs_login': 'Dev011',
-                'bs_password': 'developer',
+                'sync_movies': 'true',
+                'sync_tvshows': 'false',
                 'notify_mail': 'false',
                 'notify_twitter': 'false',
                 'update_profile': 'false'
@@ -37,7 +37,7 @@ except ImportError:
             return None
 
         def getSetting(self, key):
-            return self.settings[key]
+            return self.settings.get(key)
 
         def getLocalizedString(self, labelId):
             return 'Message {}'.format(labelId)
@@ -49,8 +49,18 @@ except ImportError:
         def ok(self, heading, text, usemono=False):
             print(heading, ' > ', text)
 
-        def textviewer(self, heading, text, usemono=False):
-            print(heading, ' > ', text)
+try:
+    from xbmcgui import DialogProgressBG
+except ImportError:
+    class DialogProgressBG:
+        def create(self, heading, msg):
+            print('{} > {}'.format(heading, msg))
+
+        def update(self, percent, heading=None, msg=None):
+            print('{} > {} ({}%)'.format(heading, msg, percent))
+
+        def close(self):
+            pass
 
 try:
     from simplecache import SimpleCache

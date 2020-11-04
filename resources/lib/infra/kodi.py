@@ -17,6 +17,12 @@ class JsonRPC:
             'params': params
         })
 
-        return json.loads(
+        return self._decodeResponse(
             xbmcmod.executeJSONRPC(request)
         )
+
+    def _decodeResponse(self, response):
+        response = json.loads(response)
+        if response.get('error'):
+            raise IOError(response.get('error'))
+        return response

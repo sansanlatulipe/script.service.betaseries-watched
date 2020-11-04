@@ -1,8 +1,7 @@
-# pylint: disable=no-self-use
-
 from resources.lib.appli import kodi as appliKodi
 from resources.lib.appli import betaseries as appliBetaseries
 from resources.lib.appli import cache
+from resources.lib.appli import settings
 from resources.lib.infra import kodi as infraKodi
 from resources.lib.infra import betaseries as infraBetaseries
 from resources.lib.infra import pymod
@@ -14,9 +13,7 @@ from resources.lib.service import movie
 class Container:
     def __init__(self):
         self.singletons = {}
-        self.addon = xbmcmod.Addon()
-        self.config = pymod.ConfigParser()
-        self.config.read(self.addon.getAddonInfo('path') + '/resources/data/config.ini')
+        self.settings = settings.Settings(self.get('addon'), pymod.ConfigParser())
 
     def get(self, service):
         if service not in self.singletons:
@@ -25,15 +22,7 @@ class Container:
         return self.singletons[service]
 
     def _initAuthentication(self):
-        if self.addon.getSetting('bs_login') and self.addon.getSetting('bs_password'):
-            config = {
-                'login': self.addon.getSetting('bs_login'),
-                'password': self.addon.getSetting('bs_password')
-            }
-        else:
-            config = {}
         return authentication.Authentication(
-            config,
             self.get('betaseries.bearer.repository')
         )
 
@@ -50,13 +39,8 @@ class Container:
         )
 
     def _initBetaseriesMovieRepository(self):
-        config = {
-            'notify_mail': self.addon.getSetting('notify_mail') == 'true',
-            'notify_twitter': self.addon.getSetting('notify_twitter') == 'true',
-            'update_profile': self.addon.getSetting('update_profile') == 'true'
-        }
         return appliBetaseries.MovieRepository(
-            config,
+            self.settings.getBetaseriesNotifications(),
             self.get('betaseries.http')
         )
 
@@ -68,7 +52,7 @@ class Container:
 
     def _initCacheRepository(self):
         return cache.Repository(
-            self.addon.getAddonInfo('id'),
+            self.settings.getAddonId(),
             xbmcmod.SimpleCache()
         )
 
@@ -77,5 +61,8 @@ class Container:
 
     def _initBetaseriesHttp(self):
         return infraBetaseries.Http(
-            self.config['Betaseries']
+            self.settings.getBetaseriesApiKey()
         )
+
+    def _initAddon(self):
+        return xbmcmod.Addon()

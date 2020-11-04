@@ -1,5 +1,5 @@
 import json
-from resources.lib.infra.pymod import HTTPConnection
+from resources.lib.infra import pymod
 
 
 class Http:
@@ -8,38 +8,45 @@ class Http:
         self.clientId = config['client_id']
         self.clientSecret = config['client_secret']
         self.bearer = None
-        self.http = HTTPConnection(config['url'])
+        self.http = pymod.HTTPConnection(config['url'])
 
-    def call(self, method, uri, data=None):
+    def get(self, uri, data=None):
+        if data:
+            uri += '?' + pymod.urlencode(data)
+        return self._call('GET', uri)
+
+    def post(self, uri, data=None):
+        if isinstance(data, dict):
+            data = json.dumps(data)
+            headers = {'Content-Type': 'application/json'}
+        else:
+            headers = None
+        return self._call('POST', uri, data, headers)
+
+    def _call(self, method, uri, body=None, headers=None):
         self.http.request(
             method,
             uri,
-            self._encodeData(data),
-            self._initHeaders(data)
+            body,
+            self._initHeaders(headers)
         )
         return self._decodeResponse(
             self.http.getresponse().read().decode()
         )
 
-    def _initHeaders(self, data):
-        headers = {
+    def _initHeaders(self, headers):
+        headers = headers or {}
+        headers.update({
             'Accept': 'application/json',
             'X-BetaSeries-Version': self.version,
             'X-BetaSeries-Key': self.clientId
-        }
-        if self.bearer is not None:
+        })
+        if self.bearer:
             headers['Authorization'] = 'Bearer ' + self.bearer
-        if isinstance(data, dict):
-            headers['Content-Type'] = 'application/json'
         return headers
-
-    def _encodeData(self, data):
-        if isinstance(data, dict):
-            return json.dumps(data)
-        return data
 
     def _decodeResponse(self, response):
         response = json.loads(response)
         if response.get('errors'):
-            raise IOError(response['errors'])
+            raise IOError(response.get('errors'))
         return response

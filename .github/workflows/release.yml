@@ -19,7 +19,7 @@ jobs:
           prerelease=`echo ${addon_version} | grep -Eq -- '-.+$' && echo true || echo false`
           echo "##[set-output name=addon_name;]${addon_name}"
           echo "##[set-output name=addon_version;]${addon_version}"
-          echo "##[set-output name=addon_asset;]${addon_version}_${addon_version}.zip"
+          echo "##[set-output name=addon_asset;]${addon_name}_${addon_version}.zip"
           echo "##[set-output name=prerelease;]${prerelease}"
       - name: Render addon.xml
         env:

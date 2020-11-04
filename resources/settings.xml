@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
     <category label="30000">
-        <setting label="30010" type="select" id="bs_auth_mode" lvalues="30011|30012" default="0" />
-        <setting label="30020" type="text" id="bs_login" default="" visible="eq(-1,1)" />
-        <setting label="30030" type="text" id="bs_password" default="" visible="eq(-2,1)" option="hidden" />
-        <setting label="30040" type="action" action="RunScript(script.service.betaseries-watched,authentication)" visible="eq(-3,0)" />
-    </category>
-    <category label="31000">
-        <setting label="31010" type="bool" id="notify_mail" default="false" />
-        <setting label="31020" type="bool" id="notify_twitter" default="false" />
-        <setting label="31030" type="bool" id="update_profile" default="false" />
-    </category>
-    <category label="32000">
-        <setting label="32010" type="bool" id="sync_movies" default="true" />
-        <setting label="32020" type="bool" id="sync_tvshows" default="false" enable="false" />
+        <setting type="action" label="30010" action="RunScript(script.service.betaseries-watched,authentication)" />
+
+        <setting type="lsep" label="31000" />
+        <setting type="bool" label="31010" id="sync_movies" default="true" />
+        <setting type="bool" label="31020" id="sync_tvshows" default="false" enable="false" />
+
+        <setting type="lsep" label="32000" />
+        <setting type="bool" label="32010" id="notify_mail" default="false" />
+        <setting type="bool" label="32020" id="notify_twitter" default="false" />
+        <setting type="bool" label="32030" id="update_profile" default="false" />
     </category>
 </settings>
