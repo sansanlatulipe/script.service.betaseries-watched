@@ -5,7 +5,7 @@ class WatchSynchro:
         self.bsRepo = bsRepo
 
     def scanAll(self):
-        self._initializeEndpoint()
+        self._initializeEndpoints()
         for kodiMovie in self.kodiRepo.retrieveAll():
             bsMovie = self.bsRepo.retrieveByTmdbId(kodiMovie.get('tmdbId'))
             self._synchronizeEntities(kodiMovie, bsMovie, source=None)
@@ -45,14 +45,12 @@ class WatchSynchro:
         elif source == 'betaseries' or source is None and bsMovie.get('isWatched'):
             self.kodiRepo.updateWatchedStatus(kodiMovie.get('id'), bsMovie.get('isWatched'))
 
-    def _initializeEndpoint(self):
-        events = self.kodiRepo.retrieveUpdatedIdsFrom(None, 1)
-        if events:
-            self.cacheRepo.setKodiEndpoint(events[0].get('endpoint'))
+    def _initializeEndpoints(self):
+        events = self.kodiRepo.retrieveUpdatedIdsFrom(None, 1) or [{}]
+        self.cacheRepo.setKodiEndpoint(events[0].get('endpoint'))
 
-        events = self.bsRepo.retrieveUpdatedIdsFrom(None, 1)
-        if events:
-            self.cacheRepo.setBetaseriesEndpoint(events[0].get('endpoint'))
+        events = self.bsRepo.retrieveUpdatedIdsFrom(None, 1) or [{}]
+        self.cacheRepo.setBetaseriesEndpoint(events[0].get('endpoint'))
 
     def _retrieveById(self, movies, movieId):
         return next(
