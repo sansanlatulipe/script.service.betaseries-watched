@@ -1,6 +1,6 @@
 import unittest
+from unittest.mock import MagicMock
 from resources.lib.util.di import Container
-from resources.lib.infra.kodi import JsonRPC
 
 
 class ContainerShould(unittest.TestCase):
@@ -8,12 +8,22 @@ class ContainerShould(unittest.TestCase):
         self.container = Container()
 
     def test_initialize_service(self):
-        service = self.container.get('kodi.jsonrpc')
-        self.assertIsInstance(service, JsonRPC)
+        fakeService = object()
+        self.container._initFakeService = MagicMock(return_value=fakeService)
+
+        service = self.container.get('fake.service')
+
+        self.container._initFakeService.assert_called_once_with()
+        self.assertEqual(service, fakeService)
 
     def test_return_same_service_on_successive_calls(self):
-        service1 = self.container.get('kodi.jsonrpc')
-        service2 = self.container.get('kodi.jsonrpc')
+        fakeService = object()
+        self.container._initFakeService = MagicMock(return_value=fakeService)
+
+        service1 = self.container.get('fake.service')
+        service2 = self.container.get('fake.service')
+
+        self.container._initFakeService.assert_called_once_with()
         self.assertEqual(service1, service2)
 
     def test_contain_the_following_services(self):
