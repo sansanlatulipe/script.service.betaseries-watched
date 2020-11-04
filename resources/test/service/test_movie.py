@@ -1,13 +1,12 @@
-import unittest
-from resources.test.mock import patch
-from resources.test.mock import MagicMock
+from resources.test.testmod import unittest
+from resources.test.testmod import mock
 from resources.lib.service.movie import WatchSynchro
 
 
 class WatchSynchroShould(unittest.TestCase):
-    @patch('resources.lib.appli.betaseries.MovieRepository')
-    @patch('resources.lib.appli.kodi.MovieRepository')
-    @patch('resources.lib.appli.cache.Repository')
+    @mock.patch('resources.lib.appli.betaseries.MovieRepository')
+    @mock.patch('resources.lib.appli.kodi.MovieRepository')
+    @mock.patch('resources.lib.appli.cache.Repository')
     def setUp(self, cacheRepo, kodiRepo, bsRepo):
         self.cacheRepo = cacheRepo
         self.kodiRepo = kodiRepo
@@ -16,8 +15,8 @@ class WatchSynchroShould(unittest.TestCase):
 
     def test_cache_last_kodi_endpoint_when_the_entire_library_is_scanned(self):
         fakeEndpoint = {'endpoint': 'kodi_endpoint'}
-        self.kodiRepo.retrieveUpdatedIdsFrom = MagicMock(return_value=[fakeEndpoint])
-        self.cacheRepo.setKodiEndpoint = MagicMock()
+        self.kodiRepo.retrieveUpdatedIdsFrom = mock.MagicMock(return_value=[fakeEndpoint])
+        self.cacheRepo.setKodiEndpoint = mock.MagicMock()
 
         self.movie.scanAll()
 
@@ -26,8 +25,8 @@ class WatchSynchroShould(unittest.TestCase):
 
     def test_cache_last_betaseries_endpoint_when_the_entire_library_is_scanned(self):
         fakeEndpoint = {'endpoint': 'betaseries_endpoint'}
-        self.bsRepo.retrieveUpdatedIdsFrom = MagicMock(return_value=[fakeEndpoint])
-        self.cacheRepo.setBetaseriesEndpoint = MagicMock()
+        self.bsRepo.retrieveUpdatedIdsFrom = mock.MagicMock(return_value=[fakeEndpoint])
+        self.cacheRepo.setBetaseriesEndpoint = mock.MagicMock()
 
         self.movie.scanAll()
 
@@ -35,10 +34,10 @@ class WatchSynchroShould(unittest.TestCase):
         self.cacheRepo.setBetaseriesEndpoint.assert_called_once_with(fakeEndpoint.get('endpoint'))
 
     def test_reset_cache_endpoints_if_none_exists_when_the_entire_library_is_scanned(self):
-        self.kodiRepo.retrieveUpdatedIdsFrom = MagicMock(return_value=[])
-        self.bsRepo.retrieveUpdatedIdsFrom = MagicMock(return_value=[])
-        self.cacheRepo.setKodiEndpoint = MagicMock()
-        self.cacheRepo.setBetaseriesEndpoint = MagicMock()
+        self.kodiRepo.retrieveUpdatedIdsFrom = mock.MagicMock(return_value=[])
+        self.bsRepo.retrieveUpdatedIdsFrom = mock.MagicMock(return_value=[])
+        self.cacheRepo.setKodiEndpoint = mock.MagicMock()
+        self.cacheRepo.setBetaseriesEndpoint = mock.MagicMock()
 
         self.movie.scanAll()
 
