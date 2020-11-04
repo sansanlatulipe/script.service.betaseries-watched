@@ -38,7 +38,7 @@ Structure
 ---------
 
 Except for the entry points, all code can be found in the directory `resources/lib/`:
-* `kernel.py`: launcher functions
+* `launcher.py`: launcher functions
 * `util/`: some helper classes and functions
 * `service/`: business logic
 * `infra/`: technical logic, like connection to API or backward compatibily
