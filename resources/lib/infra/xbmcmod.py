@@ -1,24 +1,27 @@
 # pylint: disable=unused-import
-
-try:
-    from xbmc import executeJSONRPC
-except ImportError:
-    def executeJSONRPC(query):
-        return '{"result":{"movies":[],"moviedetails":{}}}'
+# flake8: noqa
 
 try:
     from xbmc import log, LOGDEBUG, LOGINFO, LOGWARNING, LOGERROR
+    from xbmc import executeJSONRPC
+    from xbmcaddon import Addon
+    from xbmcgui import Dialog
+    from xbmcgui import DialogProgressBG
+    from simplecache import SimpleCache
 except ImportError:
-    def log(msg, lvl):
-        print(lvl, msg)
     LOGDEBUG = 'DEBUG'
     LOGINFO = 'INFO'
     LOGWARNING = 'WARNING'
     LOGERROR = 'ERROR'
 
-try:
-    from xbmcaddon import Addon
-except ImportError:
+    def log(msg, lvl):
+        print(lvl, msg)
+
+
+    def executeJSONRPC(query):
+        return '{"result":{"movies":[],"moviedetails":{}}}'
+
+
     class Addon:
         def __init__(self):
             self.settings = {
@@ -42,16 +45,12 @@ except ImportError:
         def getLocalizedString(self, labelId):
             return 'Message {}'.format(labelId)
 
-try:
-    from xbmcgui import Dialog
-except ImportError:
+
     class Dialog:
         def ok(self, heading, text, usemono=False):
             print(heading, ' > ', text)
 
-try:
-    from xbmcgui import DialogProgressBG
-except ImportError:
+
     class DialogProgressBG:
         def create(self, heading, msg):
             print('{} > {}'.format(heading, msg))
@@ -62,9 +61,7 @@ except ImportError:
         def close(self):
             pass
 
-try:
-    from simplecache import SimpleCache
-except ImportError:
+
     class SimpleCache:
         def __init__(self):
             self.cached = {}

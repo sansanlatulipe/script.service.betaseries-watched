@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import MagicMock
+from resources.test.mock import MagicMock
 from resources.lib.util.di import Container
 
 

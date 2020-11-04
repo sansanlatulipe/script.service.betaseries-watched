@@ -1,9 +1,15 @@
-# pylint: disable=unused-import
+# pylint: disable=unused-import,ungrouped-imports
+# flake8: noqa
 
 try:
     from configparser import ConfigParser
+    from http.client import HTTPConnection
+    from urllib.parse import urlencode
 except ImportError:
     from ConfigParser import ConfigParser as BaseParser
+    from httplib import HTTPConnection
+    from urllib import urlencode
+
 
     class ConfigParser(BaseParser):
         def __getitem__(self, section):
@@ -11,13 +17,3 @@ except ImportError:
             for option in self.items(section):
                 config[option[0]] = option[1]
             return config
-
-try:
-    from http.client import HTTPConnection
-except ImportError:
-    from httplib import HTTPConnection  # noqa: F401
-
-try:
-    from urllib.parse import urlencode
-except ImportError:
-    from urllib import urlencode  # noqa: F401

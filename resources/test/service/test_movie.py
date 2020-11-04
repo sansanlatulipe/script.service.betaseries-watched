@@ -1,6 +1,6 @@
 import unittest
-from unittest.mock import patch
-from unittest.mock import MagicMock
+from resources.test.mock import patch
+from resources.test.mock import MagicMock
 from resources.lib.service.movie import WatchSynchro
 
 
