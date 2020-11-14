@@ -9,7 +9,7 @@ class ContainerShould(unittest.TestCase):
 
     def test_initialize_service(self):
         fakeService = object()
-        self.container._initFakeService = mock.MagicMock(return_value=fakeService)
+        self.container._initFakeService = mock.Mock(return_value=fakeService)
 
         service = self.container.get('fake.service')
 
@@ -18,7 +18,7 @@ class ContainerShould(unittest.TestCase):
 
     def test_return_same_service_on_successive_calls(self):
         fakeService = object()
-        self.container._initFakeService = mock.MagicMock(return_value=fakeService)
+        self.container._initFakeService = mock.Mock(return_value=fakeService)
 
         service1 = self.container.get('fake.service')
         service2 = self.container.get('fake.service')

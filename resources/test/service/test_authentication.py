@@ -10,7 +10,7 @@ class AuthenticationShould(unittest.TestCase):
         self.authentication = Authentication(bearerRepo)
 
     def test_be_authenticated_when_bearer_exists(self):
-        self.bearerRepo.exists = mock.MagicMock(return_value=True)
+        self.bearerRepo.exists = mock.Mock(return_value=True)
 
         authenticated = self.authentication.isAuthenticated()
 
@@ -19,7 +19,7 @@ class AuthenticationShould(unittest.TestCase):
 
     def test_create_device_token_when_authentication_is_initialized(self):
         fakeDevice = {'token': 'random_device_identifier'}
-        self.bearerRepo.createDeviceToken = mock.MagicMock(return_value=fakeDevice)
+        self.bearerRepo.createDeviceToken = mock.Mock(return_value=fakeDevice)
 
         device = self.authentication.initialize()
 
@@ -29,7 +29,7 @@ class AuthenticationShould(unittest.TestCase):
     def test_create_bearer_when_authentication_is_finalized_from_device_token(self):
         fakeDevice = {'token': 'random_device_identifier'}
         fakeBearer = 'random_bearer+identifier'
-        self.bearerRepo.createFromDevice = mock.MagicMock(return_value=fakeBearer)
+        self.bearerRepo.createFromDevice = mock.Mock(return_value=fakeBearer)
 
         bearer = self.authentication.finalize(fakeDevice)
 
