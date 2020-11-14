@@ -14,7 +14,7 @@ class ContainerShould(unittest.TestCase):
         service = self.container.get('fake.service')
 
         self.container._initFakeService.assert_called_once_with()
-        self.assertEqual(service, fakeService)
+        self.assertEqual(fakeService, service)
 
     def test_return_same_service_on_successive_calls(self):
         fakeService = object()

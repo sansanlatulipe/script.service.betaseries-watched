@@ -24,7 +24,7 @@ class AuthenticationShould(unittest.TestCase):
         device = self.authentication.initialize()
 
         self.bearerRepo.createDeviceToken.assert_called_once_with()
-        self.assertEqual(device, fakeDevice)
+        self.assertEqual(fakeDevice, device)
 
     def test_create_bearer_when_authentication_is_finalized_from_device_token(self):
         fakeDevice = {'token': 'random_device_identifier'}
