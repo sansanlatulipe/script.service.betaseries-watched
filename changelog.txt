@@ -1,1 +1,1 @@
-- Initial version
+- Add service to update the synchronization every hour
