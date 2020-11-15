@@ -9,7 +9,7 @@ class MovieRepository:
 
     def retrieveById(self, movieId):
         response = self.http.get(
-            '/movies/movie,',
+            '/movies/movie',
             {'id': movieId}
         )
         return self._buildEntity(response)

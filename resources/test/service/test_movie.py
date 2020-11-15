@@ -11,7 +11,7 @@ class WatchSynchroShould(unittest.TestCase):
         self.cacheRepo = cacheRepo
         self.kodiRepo = kodiRepo
         self.bsRepo = bsRepo
-        self.movie = WatchSynchro(cacheRepo, kodiRepo, bsRepo)
+        self.movie = WatchSynchro(self.cacheRepo, self.kodiRepo, self.bsRepo)
 
     def test_cache_last_kodi_endpoint_when_the_entire_library_is_scanned(self):
         fakeEndpoint = {'endpoint': 'kodi_endpoint'}

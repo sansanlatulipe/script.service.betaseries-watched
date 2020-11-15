@@ -7,7 +7,7 @@ class AuthenticationShould(unittest.TestCase):
     @mock.patch('resources.lib.appli.betaseries.BearerRepository')
     def setUp(self, bearerRepo):
         self.bearerRepo = bearerRepo
-        self.authentication = Authentication(bearerRepo)
+        self.authentication = Authentication(self.bearerRepo)
 
     def test_be_authenticated_when_bearer_exists(self):
         self.bearerRepo.exists = mock.Mock(return_value=True)
