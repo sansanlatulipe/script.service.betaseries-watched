@@ -4,8 +4,9 @@
 try:
     from xbmc import log, LOGDEBUG, LOGINFO, LOGWARNING, LOGERROR
     from xbmc import executeJSONRPC
+    from xbmc import Monitor
     from xbmcaddon import Addon
-    from xbmcgui import Dialog
+    from xbmcgui import Dialog, NOTIFICATION_INFO, NOTIFICATION_WARNING, NOTIFICATION_ERROR
     from xbmcgui import DialogProgressBG
     from simplecache import SimpleCache
 except ImportError:
@@ -13,6 +14,9 @@ except ImportError:
     LOGINFO = 'INFO'
     LOGWARNING = 'WARNING'
     LOGERROR = 'ERROR'
+    NOTIFICATION_INFO = 'INFO'
+    NOTIFICATION_WARNING = 'WARNING'
+    NOTIFICATION_ERROR = 'ERROR'
 
     def log(msg, lvl):
         print(lvl, msg)
@@ -20,6 +24,18 @@ except ImportError:
 
     def executeJSONRPC(query):
         return '{"result":{"movies":[],"moviedetails":{}}}'
+
+
+    class Monitor:
+        def __init__(self):
+            self.requests = 0
+
+        def waitForAbort(self, timeout=0):
+            pass
+
+        def abortRequested(self):
+            self.requests += 1
+            return self.requests > 1
 
 
     class Addon:
@@ -47,8 +63,8 @@ except ImportError:
 
 
     class Dialog:
-        def ok(self, heading, text, usemono=False):
-            print(heading, ' > ', text)
+        def notification(self, heading, text, icon=NOTIFICATION_INFO, time=5000, sound=True):
+            print('[{}] {} > {}'.format(icon, heading, text))
 
 
     class DialogProgressBG:

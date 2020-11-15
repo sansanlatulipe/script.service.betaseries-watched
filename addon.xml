@@ -6,7 +6,7 @@
 	</requires>
 
 	<extension point="xbmc.python.script" library="addon.py" />
-	<!-- <extension point="xbmc.service" library="service.py" /> -->
+	<extension point="xbmc.service" library="service.py" />
 
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en_GB">Synchronization with Betaseries</summary>

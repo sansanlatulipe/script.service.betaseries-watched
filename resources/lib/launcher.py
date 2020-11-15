@@ -21,12 +21,13 @@ class Launcher:
 
     def _authenticationDialog(self, device):
         addon = self.container.get('addon')
-        Dialog().ok(
+        Dialog().notification(
             addon.getLocalizedString(20000).encode('utf-8'),
             addon.getLocalizedString(20001).format(
                 device['verification_url'],
                 device['user_code']
-            ).encode('utf-8')
+            ).encode('utf-8'),
+            time=device['expires_in'] * 1000
         )
 
     def _isMovieSynchronizationReady(self):
