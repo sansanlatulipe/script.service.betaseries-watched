@@ -17,14 +17,22 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgctxt "#20000"
-msgid "Dialog Betaseries header"
+msgid "Dialog connection header"
 msgstr "Betaseries connection"
 
 msgctxt "#20001"
-msgid "Dialog Betaseries message"
+msgid "Dialog connection message"
 msgstr ""
 "Please go to {0}\n"
 "and enter the code {1}"
+
+msgctxt "#21000"
+msgid "Dialog synchronization header"
+msgstr "Synchronization with Betaseries"
+
+msgctxt "#21001"
+msgid "Dialog synchronization message"
+msgstr "Starting full scan..."
 
 msgctxt "#30000"
 msgid "Settings"

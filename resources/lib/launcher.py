@@ -8,7 +8,7 @@ class Launcher:
 
     def authenticate(self):
         device = self.container.get('authentication').initialize()
-        self._authenticationDialog(device)
+        self._dialogAuthentication(device)
         self.container.get('authentication').finalize(device)
 
     def fromScratch(self):
@@ -19,15 +19,21 @@ class Launcher:
         if self._isMovieSynchronizationReady():
             self.container.get('movie.watch').scanRecentlyUpdated()
 
-    def _authenticationDialog(self, device):
+    def _dialogAuthentication(self, device):
         addon = self.container.get('addon')
-        Dialog().notification(
+        Dialog().ok(
             addon.getLocalizedString(20000).encode('utf-8'),
             addon.getLocalizedString(20001).format(
                 device['verification_url'],
                 device['user_code']
-            ).encode('utf-8'),
-            time=device['expires_in'] * 1000
+            ).encode('utf-8')
+        )
+
+    def _dialogStartFromScratch(self):
+        addon = self.container.get('addon')
+        Dialog().notification(
+            addon.getLocalizedString(21000).encode('utf-8'),
+            addon.getLocalizedString(21001).encode('utf-8')
         )
 
     def _isMovieSynchronizationReady(self):

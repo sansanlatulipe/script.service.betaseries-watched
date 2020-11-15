@@ -63,6 +63,9 @@ except ImportError:
 
 
     class Dialog:
+        def ok(self, heading, text):
+            print('{} > {}'.format(heading, text))
+
         def notification(self, heading, text, icon=NOTIFICATION_INFO, time=5000, sound=True):
             print('[{}] {} > {}'.format(icon, heading, text))
 
