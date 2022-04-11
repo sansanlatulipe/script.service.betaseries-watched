@@ -31,6 +31,10 @@ jobs:
               -e "s/{{ addon_version }}/${addon_version}/" \
               -e "/{{ addon_changelog }}/r changelog.txt" \
               -e "s/^.*{{ addon_changelog }}/${addon_version} (`date +'%Y-%m-%d'`)/"
+      - name: Check addon resources
+        run: |
+          pip install kodi-addon-checker
+          kodi-addon-checker --branch matrix
       - name: Build asset
         env:
           addon_name: ${{ steps.config.outputs.addon_name }}
