@@ -59,23 +59,23 @@ except ImportError:
             return self.settings.get(key)
 
         def getLocalizedString(self, labelId):
-            return f"Message {labelId}"
+            return 'Message {}'.format(labelId)
 
 
     class Dialog:
         def ok(self, heading, text):
-            print(f"{heading} > {text}")
+            print('{} > {}'.format(heading, text))
 
         def notification(self, heading, text, icon=NOTIFICATION_INFO, time=5000, sound=True):
-            print(f"[{icon}] {heading} > {text}")
+            print('[{}] {} > {}'.format(icon, heading, text))
 
 
     class DialogProgressBG:
         def create(self, heading, msg):
-            print(f"{heading} > {msg}")
+            print('{} > {}'.format(heading, msg))
 
         def update(self, percent, heading=None, msg=None):
-            print(f"{heading} > {msg} ({percent}%)")
+            print('{} > {} ({}%)'.format(heading, msg, percent))
 
         def close(self):
             pass
