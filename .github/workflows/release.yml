@@ -11,56 +11,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Initialize release variables
-        id: config
-        run: |
-          addon_name=`echo "${GITHUB_REPOSITORY}" | cut -d / -f 2`
-          addon_version=`echo "${GITHUB_REF}" | cut -d / -f 3`
-          prerelease=`echo ${addon_version} | grep -Eq -- '-.+$' && echo true || echo false`
-          echo "##[set-output name=addon_name;]${addon_name}"
-          echo "##[set-output name=addon_version;]${addon_version}"
-          echo "##[set-output name=addon_asset;]${addon_name}_${addon_version}.zip"
-          echo "##[set-output name=prerelease;]${prerelease}"
-      - name: Render addon.xml
-        env:
-          addon_name: ${{ steps.config.outputs.addon_name }}
-          addon_version: ${{ steps.config.outputs.addon_version }}
-        run: |
-          sed -i addon.xml \
-              -e "s/{{ addon_name }}/${addon_name}/" \
-              -e "s/{{ addon_version }}/${addon_version}/" \
-              -e "/{{ addon_changelog }}/r changelog.txt" \
-              -e "s/^.*{{ addon_changelog }}/${addon_version} (`date +'%Y-%m-%d'`)/"
-      - name: Check addon resources
-        run: |
-          pip install kodi-addon-checker
-          kodi-addon-checker --branch matrix
-      - name: Build asset
-        env:
-          addon_name: ${{ steps.config.outputs.addon_name }}
-          addon_asset: ${{ steps.config.outputs.addon_asset }}
-        run: |
-          mkdir .${addon_name}
-          cp -r * .${addon_name}
-          mv .${addon_name} ${addon_name}
-          zip -r ${addon_asset} ${addon_name}
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create addon
+        uses: sansanlatulipe/github-actions/kodi-release@main
         with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          body_path: ./changelog.txt
-          prerelease: ${{ steps.config.outputs.prerelease }}
-          draft: false
-      - name: Upload release asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ steps.config.outputs.addon_asset }}
-          asset_name: ${{ steps.config.outputs.addon_asset }}
-          asset_content_type: application/zip
+          kodi-version: matrix
