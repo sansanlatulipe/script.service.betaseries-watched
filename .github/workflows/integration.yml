@@ -1,4 +1,4 @@
-name: Check quality
+name: Integration
 
 on:
   push:

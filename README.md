@@ -1,41 +1,42 @@
-Introduction
-============
+# Synchronization with Betaseries
 
-This service automatically updates your profile on Betaseries when you have finished watching an episode or a movie on Kodi
+[![GitHub release](https://img.shields.io/github/v/release/sansanlatulipe/script.service.betaseries-watched.svg)](https://github.com/sansanlatulipe/script.service.betaseries-watched/releases)
+[![Integration](https://github.com/sansanlatulipe/script.service.betaseries-watched/workflows/Integration/badge.svg)](https://github.com/sansanlatulipe/script.service.betaseries-watched/actions/workflows/integration.yml)
+[![Codecov status](https://img.shields.io/codecov/c/github/sansanlatulipe/script.service.betaseries-watched/main)](https://codecov.io/gh/sansanlatulipe/script.service.betaseries-watched/branch/main)
 
-Features
-========
+This project is a service addon for Kodi media center.
+It automatically updates your profile on Betaseries when you have finished watching an episode or a movie on Kodi.
 
-* Movie synchronization
+## Features
 
-How it works
-============
+* Synchronize watched movies between Betaseries and Kodi library
 
-Entry points
-------------
+### To do
+
+* Synchronize watched TV show episodes between Betaseries and Kodi library
+* Mark a movie as watched on Betaseries when a video stream ends
+* Mark a TV show episode as watched on Betaseries when a video stream ends
+
+## How it works
+
+### Business logic
+
+#### Movie synchronization
+
+On first scan.
+For each movie stored in the Kodi library, if it is flagged as watched on either side (Kodi or Betaseries), ensure it is true on the other as well.
+
+On complementary scans.
+Firstly, for each updates registered in Kodi (watched or unwatched), duplicate it on Betaseries.
+Secondly, for each updates in Betaseries timeline (watched or unwatched), duplicate it on Kodi.
+
+### Technical logic
 
 There is several ways to start this add-ons:
 * A service (`service.py`) that regularly checks updates from Betaseries and Kodi
 * An executable (`addon.py`)
   * By default, it rescans the entire Kodi library and synchronizes with Betaseries on-demand
   * With the option "authentication", it initializes the connection with Betaseries API
-
-Business logic
---------------
-
-### Movie synchronization
-
-#### First scan or full rescan
-
-For each movie stored in the Kodi library, if it is flagged as watched on either side (Kodi or Betaseries), ensure it is true on the other as well.
-
-#### Complementary scans
-
-Firstly, for each updates registered in Kodi (watched or unwatched), duplicate it on Betaseries.
-Secondly, for each updates in Betaseries timeline (watched or unwatched), duplicate it on Kodi.
-
-Structure
----------
 
 Except for the entry points, all code can be found in the directory `resources/lib/`:
 * `launcher.py`: launcher functions
