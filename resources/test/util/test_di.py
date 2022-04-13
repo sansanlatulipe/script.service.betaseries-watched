@@ -36,7 +36,7 @@ class ContainerShould(unittest.TestCase):
             'cache.repository',
             'kodi.jsonrpc',
             'kodi.movie.repository',
-            'movie.watch'
+            'movie.sync'
         ]
         for service in services:
             self.assertIsNotNone(self.container.get(service))

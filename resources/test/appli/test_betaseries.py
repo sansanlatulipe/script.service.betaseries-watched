@@ -59,7 +59,7 @@ class MovieRepositoryShould(unittest.TestCase):
             'id': 'user_1',
             'nbpp': 1
         })
-        self.assertEqual([{'movieId': 5, 'endpoint': 12345}], events)
+        self.assertEqual([{'id': 5, 'endpoint': 12345}], events)
 
     def test_retrieve_movie_events_when_retrieving_updated_from_endpoint(self):
         self.http.get = mock.Mock(side_effect=[
@@ -76,7 +76,7 @@ class MovieRepositoryShould(unittest.TestCase):
             'nbpp': 100
         })
         self.assertEqual(
-            [{'movieId': 6, 'endpoint': 12346}, {'movieId': 7, 'endpoint': 12347}],
+            [{'id': 6, 'endpoint': 12346}, {'id': 7, 'endpoint': 12347}],
             events
         )
 

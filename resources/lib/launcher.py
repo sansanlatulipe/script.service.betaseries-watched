@@ -13,11 +13,11 @@ class Launcher:
 
     def fromScratch(self):
         if self._isMovieSynchronizationReady():
-            self.container.get('movie.watch').scanAll()
+            self.container.get('movie.sync').scanAll()
 
     def fromLastCheckpoint(self):
         if self._isMovieSynchronizationReady():
-            self.container.get('movie.watch').scanRecentlyUpdated()
+            self.container.get('movie.sync').scanRecentlyUpdated()
 
     def _dialogAuthentication(self, device):
         addon = self.container.get('addon')

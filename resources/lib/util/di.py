@@ -7,7 +7,7 @@ from resources.lib.infra import betaseries as infraBetaseries
 from resources.lib.infra import pymod
 from resources.lib.infra import xbmcmod
 from resources.lib.service import authentication
-from resources.lib.service import movie
+from resources.lib.service import sync
 
 
 class Container:
@@ -60,8 +60,8 @@ class Container:
             self.get('kodi.jsonrpc')
         )
 
-    def _initMovieWatch(self):
-        return movie.WatchSynchro(
+    def _initMovieSync(self):
+        return sync.WatchSynchro(
             self.get('cache.repository'),
             self.get('kodi.movie.repository'),
             self.get('betaseries.movie.repository')

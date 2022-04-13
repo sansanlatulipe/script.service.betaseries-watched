@@ -34,16 +34,16 @@ class MovieRepository:
         response = self.http.get('/timeline/member', params)
         return [
             {
-                'movieId': event.get('ref_id'),
+                'id': event.get('ref_id'),
                 'endpoint': event.get('id')
             } for event in response.get('events')[::-1]
         ]
 
-    def updateWatchedStatus(self, movieId, isWatched):
+    def updateWatchedStatus(self, id, isWatched):
         self.http.post(
             '/movies/movie',
             {
-                'id': movieId,
+                'id': id,
                 'state': 1 if isWatched else 0,
                 'mail': 1 if self.config.get('notify_mail') else 0,
                 'twitter': 1 if self.config.get('notify_twitter') else 0,

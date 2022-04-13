@@ -29,7 +29,7 @@ class MovieRepository:
         )
         return [
             {
-                'movieId': event.get('movieid'),
+                'id': event.get('movieid'),
                 'endpoint': event.get('dateadded')
             } for event in response.get('result').get('movies')[::-1]
         ]

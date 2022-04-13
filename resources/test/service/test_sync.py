@@ -1,6 +1,6 @@
 from resources.test.testmod import unittest
 from resources.test.testmod import mock
-from resources.lib.service.movie import WatchSynchro
+from resources.lib.service.sync import WatchSynchro
 
 
 class WatchSynchroShould(unittest.TestCase):
@@ -44,7 +44,7 @@ class WatchSynchroShould(unittest.TestCase):
         self.cacheRepo.setKodiEndpoint.assert_called_once_with(None)
         self.cacheRepo.setBetaseriesEndpoint.assert_called_once_with(None)
 
-    def test_try_and_retrieve_each_kodi_movie_from_betaseries_when_the_entire_library_is_scanned(self):
+    def test_look_for_all_kodi_media_from_betaseries_when_the_entire_library_is_scanned(self):
         kodiMovies = [
             {'id': 'kodi-1', 'tmdbId': 1001, 'isWatched': False},
             {'id': 'kodi-2', 'tmdbId': 1002, 'isWatched': False}
@@ -60,7 +60,7 @@ class WatchSynchroShould(unittest.TestCase):
             mock.call(1002)
         ])
 
-    def test_update_betaseries_movie_watched_status_when_it_has_been_watched_on_kodi(self):
+    def test_mark_betaseries_medium_as_watched_when_it_has_been_watched_on_kodi(self):
         kodiMovie = {'id': 'kodi-1', 'tmdbId': 1001, 'isWatched': True}
         bsMovie = {'id': 'bs-1', 'tmdbId': 1001, 'isWatched': False}
         self.kodiRepo.retrieveAll = mock.Mock(return_value=[kodiMovie])
@@ -71,7 +71,7 @@ class WatchSynchroShould(unittest.TestCase):
 
         self.bsRepo.updateWatchedStatus.assert_called_once_with('bs-1', True)
 
-    def test_update_kodi_movie_watched_status_when_it_has_been_watched_on_betaseries(self):
+    def test_mark_kodi_medium_as_watched_when_it_has_been_watched_on_betaseries(self):
         kodiMovie = {'id': 'kodi-1', 'tmdbId': 1001, 'isWatched': False}
         bsMovie = {'id': 'bs-1', 'tmdbId': 1001, 'isWatched': True}
         self.kodiRepo.retrieveAll = mock.Mock(return_value=[kodiMovie])
