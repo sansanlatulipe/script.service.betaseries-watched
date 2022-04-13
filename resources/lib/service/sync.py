@@ -70,14 +70,14 @@ class WatchSynchro:
 
     @staticmethod
     def _retrieveById(media, mediumId):
-        return next(
-            (medium for medium in media if medium.get('id') == mediumId),
-            None
-        )
+        for medium in media:
+            if medium.get('id') == mediumId:
+                return medium
+        return None
 
     @staticmethod
     def _retrieveByTmdbId(media, tmdbId):
-        return next(
-            (medium for medium in media if medium.get('tmdbId') == tmdbId),
-            None
-        )
+        for medium in media:
+            if medium.get('tmdbId') == tmdbId:
+                return medium
+        return None

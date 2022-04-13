@@ -14,24 +14,24 @@ class WatchSynchroShould(unittest.TestCase):
         self.sync = WatchSynchro(self.cacheRepo, self.kodiRepo, self.bsRepo)
 
     def test_cache_last_kodi_endpoint_when_the_entire_library_is_scanned(self):
-        fakeEndpoint = {'endpoint': 'kodi_endpoint'}
+        fakeEndpoint = {'endpoint': 'event_1'}
         self.kodiRepo.retrieveUpdatedIdsFrom = mock.Mock(return_value=[fakeEndpoint])
         self.cacheRepo.setKodiEndpoint = mock.Mock()
 
         self.sync.scanAll()
 
         self.kodiRepo.retrieveUpdatedIdsFrom.assert_called_once_with(None, 1)
-        self.cacheRepo.setKodiEndpoint.assert_called_once_with('kodi_endpoint')
+        self.cacheRepo.setKodiEndpoint.assert_called_once_with('event_1')
 
     def test_cache_last_betaseries_endpoint_when_the_entire_library_is_scanned(self):
-        fakeEndpoint = {'endpoint': 'betaseries_endpoint'}
+        fakeEndpoint = {'endpoint': 'event_1'}
         self.bsRepo.retrieveUpdatedIdsFrom = mock.Mock(return_value=[fakeEndpoint])
         self.cacheRepo.setBetaseriesEndpoint = mock.Mock()
 
         self.sync.scanAll()
 
         self.bsRepo.retrieveUpdatedIdsFrom.assert_called_once_with(None, 1)
-        self.cacheRepo.setBetaseriesEndpoint.assert_called_once_with('betaseries_endpoint')
+        self.cacheRepo.setBetaseriesEndpoint.assert_called_once_with('event_1')
 
     def test_reset_cache_endpoints_if_none_exists_when_the_entire_library_is_scanned(self):
         self.kodiRepo.retrieveUpdatedIdsFrom = mock.Mock(return_value=[])
@@ -81,6 +81,30 @@ class WatchSynchroShould(unittest.TestCase):
         self.sync.scanAll()
 
         self.kodiRepo.updateWatchedStatus.assert_called_once_with('kodi-1', True)
+
+    def test_retrieve_kodi_events_from_cached_endpoint_when_scanning_recent_updates(self):
+        fakeEndpoint = {'endpoint': 'event_2', 'id': 'kodi-1'}
+        self.cacheRepo.getKodiEndpoint = mock.Mock(return_value='event_1')
+        self.cacheRepo.setKodiEndpoint = mock.Mock()
+        self.kodiRepo.retrieveAll = mock.Mock(return_value=[{'id': 'kodi-1'}])
+        self.kodiRepo.retrieveUpdatedIdsFrom = mock.Mock(return_value=[fakeEndpoint])
+
+        self.sync.scanRecentlyUpdated()
+
+        self.kodiRepo.retrieveUpdatedIdsFrom.assert_called_once_with('event_1')
+        self.cacheRepo.setKodiEndpoint.assert_called_once_with('event_2')
+
+    def test_retrieve_betaseries_events_from_cached_endpoint_when_scanning_recent_updates(self):
+        fakeEndpoint = {'endpoint': 'event_2', 'id': 'bs-1'}
+        self.cacheRepo.getBetaseriesEndpoint = mock.Mock(return_value='event_1')
+        self.cacheRepo.setBetaseriesEndpoint = mock.Mock()
+        self.bsRepo.retrieveById = mock.Mock(return_value={'id': 'bs-1'})
+        self.bsRepo.retrieveUpdatedIdsFrom = mock.Mock(return_value=[fakeEndpoint])
+
+        self.sync.scanRecentlyUpdated()
+
+        self.bsRepo.retrieveUpdatedIdsFrom.assert_called_once_with('event_1')
+        self.cacheRepo.setBetaseriesEndpoint.assert_called_once_with('event_2')
 
     def test_update_betaseries_medium_when_its_kodi_twin_has_been_updated_recently(self):
         kodiMovie = {'id': 'kodi-1', 'tmdbId': 1001, 'isWatched': False}
