@@ -11,14 +11,14 @@ class WatchSynchroShould(unittest.TestCase):
         self.cacheRepo = cacheRepo
         self.kodiRepo = kodiRepo
         self.bsRepo = bsRepo
-        self.movie = WatchSynchro(self.cacheRepo, self.kodiRepo, self.bsRepo)
+        self.sync = WatchSynchro(self.cacheRepo, self.kodiRepo, self.bsRepo)
 
     def test_cache_last_kodi_endpoint_when_the_entire_library_is_scanned(self):
         fakeEndpoint = {'endpoint': 'kodi_endpoint'}
         self.kodiRepo.retrieveUpdatedIdsFrom = mock.Mock(return_value=[fakeEndpoint])
         self.cacheRepo.setKodiEndpoint = mock.Mock()
 
-        self.movie.scanAll()
+        self.sync.scanAll()
 
         self.kodiRepo.retrieveUpdatedIdsFrom.assert_called_once_with(None, 1)
         self.cacheRepo.setKodiEndpoint.assert_called_once_with('kodi_endpoint')
@@ -28,7 +28,7 @@ class WatchSynchroShould(unittest.TestCase):
         self.bsRepo.retrieveUpdatedIdsFrom = mock.Mock(return_value=[fakeEndpoint])
         self.cacheRepo.setBetaseriesEndpoint = mock.Mock()
 
-        self.movie.scanAll()
+        self.sync.scanAll()
 
         self.bsRepo.retrieveUpdatedIdsFrom.assert_called_once_with(None, 1)
         self.cacheRepo.setBetaseriesEndpoint.assert_called_once_with('betaseries_endpoint')
@@ -39,7 +39,7 @@ class WatchSynchroShould(unittest.TestCase):
         self.cacheRepo.setKodiEndpoint = mock.Mock()
         self.cacheRepo.setBetaseriesEndpoint = mock.Mock()
 
-        self.movie.scanAll()
+        self.sync.scanAll()
 
         self.cacheRepo.setKodiEndpoint.assert_called_once_with(None)
         self.cacheRepo.setBetaseriesEndpoint.assert_called_once_with(None)
@@ -52,7 +52,7 @@ class WatchSynchroShould(unittest.TestCase):
         self.kodiRepo.retrieveAll = mock.Mock(return_value=kodiMovies)
         self.bsRepo.retrieveByTmdbId = mock.Mock(return_value=None)
 
-        self.movie.scanAll()
+        self.sync.scanAll()
 
         self.assertEqual(2, self.bsRepo.retrieveByTmdbId.call_count)
         self.bsRepo.retrieveByTmdbId.assert_has_calls([
@@ -67,7 +67,7 @@ class WatchSynchroShould(unittest.TestCase):
         self.bsRepo.retrieveByTmdbId = mock.Mock(return_value=bsMovie)
         self.bsRepo.updateWatchedStatus = mock.Mock()
 
-        self.movie.scanAll()
+        self.sync.scanAll()
 
         self.bsRepo.updateWatchedStatus.assert_called_once_with('bs-1', True)
 
@@ -78,6 +78,30 @@ class WatchSynchroShould(unittest.TestCase):
         self.bsRepo.retrieveByTmdbId = mock.Mock(return_value=bsMovie)
         self.kodiRepo.updateWatchedStatus = mock.Mock()
 
-        self.movie.scanAll()
+        self.sync.scanAll()
 
         self.kodiRepo.updateWatchedStatus.assert_called_once_with('kodi-1', True)
+
+    def test_update_betaseries_medium_when_its_kodi_twin_has_been_updated_recently(self):
+        kodiMovie = {'id': 'kodi-1', 'tmdbId': 1001, 'isWatched': False}
+        bsMovie = {'id': 'bs-1', 'tmdbId': 1001, 'isWatched': True}
+        self.kodiRepo.retrieveAll = mock.Mock(return_value=[kodiMovie])
+        self.bsRepo.retrieveByTmdbId = mock.Mock(return_value=bsMovie)
+        self.kodiRepo.retrieveUpdatedIdsFrom = mock.Mock(return_value=[{'id': 'kodi-1', 'endpoint': 'event_1'}])
+        self.bsRepo.updateWatchedStatus = mock.Mock()
+
+        self.sync.scanRecentlyUpdated()
+
+        self.bsRepo.updateWatchedStatus.assert_called_once_with('bs-1', False)
+
+    def test_update_kodi_medium_when_its_betaseries_twin_has_been_updated_recently(self):
+        kodiMovie = {'id': 'kodi-1', 'tmdbId': 1001, 'isWatched': True}
+        bsMovie = {'id': 'bs-1', 'tmdbId': 1001, 'isWatched': False}
+        self.kodiRepo.retrieveAll = mock.Mock(return_value=[kodiMovie])
+        self.bsRepo.retrieveById = mock.Mock(return_value=bsMovie)
+        self.bsRepo.retrieveUpdatedIdsFrom = mock.Mock(return_value=[{'id': 'bs-1', 'endpoint': 'event_1'}])
+        self.kodiRepo.updateWatchedStatus = mock.Mock()
+
+        self.sync.scanRecentlyUpdated()
+
+        self.kodiRepo.updateWatchedStatus.assert_called_once_with('kodi-1', False)
