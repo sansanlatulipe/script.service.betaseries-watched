@@ -23,7 +23,8 @@ class MovieRepositoryShould(unittest.TestCase):
         self.http.get.assert_called_once_with('/movies/movie', {'id': 5})
         self.assertEqual(
             self._buildMovieEntity(True),
-            movie)
+            movie
+        )
 
     def test_return_none_when_retrieving_with_unknown_id(self):
         self.http.get = mock.Mock(return_value={})
@@ -41,34 +42,39 @@ class MovieRepositoryShould(unittest.TestCase):
         self.http.get.assert_called_once_with('/movies/movie', {'tmdb_id': 1005})
         self.assertEqual(
             self._buildMovieEntity(False),
-            movie)
+            movie
+        )
 
     def test_retrieve_last_movie_event_when_retrieving_updates_with_limit_1(self):
         self.http.get = mock.Mock(side_effect=[
-            {'member': {'id': 1}},
+            {'member': {'id': 'user_1'}},
             {'events': [{'ref_id': 5, 'id': 12345}]}
         ])
 
         events = self.repo.retrieveUpdatedIdsFrom(None, 1)
 
         self.assertEqual(2, self.http.get.call_count)
-        self.http.get.assert_has_calls([
-            mock.call('/members/infos', {'summary': 'true'}),
-            mock.call('/timeline/member', {'types': 'film_add', 'id': 1, 'nbpp': 1})
-        ])
+        self.http.get.assert_called_with('/timeline/member', {
+            'types': 'film_add',
+            'id': 'user_1',
+            'nbpp': 1
+        })
         self.assertEqual([{'movieId': 5, 'endpoint': 12345}], events)
 
     def test_retrieve_movie_events_when_retrieving_updated_from_endpoint(self):
         self.http.get = mock.Mock(side_effect=[
-            {'member': {'id': 1}},
+            {'member': {'id': 'user_1'}},
             {'events': [{'ref_id': 7, 'id': 12347}, {'ref_id': 6, 'id': 12346}]}
         ])
 
         events = self.repo.retrieveUpdatedIdsFrom(12345)
 
-        self.http.get.assert_has_calls([
-            mock.call('/timeline/member', {'types': 'film_add', 'id': 1, 'since_id': 12345, 'nbpp': 100})
-        ])
+        self.http.get.assert_called_with('/timeline/member', {
+            'types': 'film_add',
+            'id': 'user_1',
+            'since_id': 12345,
+            'nbpp': 100
+        })
         self.assertEqual(
             [{'movieId': 6, 'endpoint': 12346}, {'movieId': 7, 'endpoint': 12347}],
             events

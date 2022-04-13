@@ -72,10 +72,6 @@ class BearerRepository:
         self.http.bearer = self.cacheRepo.getBetaseriesBearer()
         return self.http.bearer is not None
 
-    def createFromCredentials(self, login, password):
-        response = self._initializeFromCredentials(login, password)
-        return self._validate(response)
-
     def createDeviceToken(self):
         return self.http.post('/oauth/device')
 
@@ -87,15 +83,6 @@ class BearerRepository:
             if self._validate(response):
                 return True
         return False
-
-    def _initializeFromCredentials(self, login, password):
-        return self.http.post(
-            '/members/auth',
-            {
-                'login': login,
-                'password': hashlib.md5(password.encode('utf-8')).hexdigest()
-            }
-        )
 
     def _initializeFromDevice(self, device):
         try:
