@@ -39,11 +39,11 @@ class MovieRepository:
             } for event in response.get('events')[::-1]
         ]
 
-    def updateWatchedStatus(self, id, isWatched):
+    def updateWatchedStatus(self, movieId, isWatched):
         self.http.post(
             '/movies/movie',
             {
-                'id': id,
+                'id': movieId,
                 'state': 1 if isWatched else 0,
                 'mail': 1 if self.config.get('notify_mail') else 0,
                 'twitter': 1 if self.config.get('notify_twitter') else 0,

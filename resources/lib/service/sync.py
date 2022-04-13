@@ -38,11 +38,11 @@ class WatchSynchro:
         self.cacheRepo.setBetaseriesEndpoint(endpoint)
 
     def _synchronizeEntities(self, kodiMedium, bsMedium, source):
-        if not kodiMedium or not bsMedium or kodiMedium.get('isWatched') == bsMedium.get('isWatched'):
+        if self._doestNotNeedToSynchronize(kodiMedium, bsMedium, source):
             pass
-        elif source == 'kodi' or source is None and kodiMedium.get('isWatched'):
+        elif self._needsToSynchronizeBetaseriesMedium(kodiMedium, bsMedium, source):
             self.bsRepo.updateWatchedStatus(bsMedium.get('id'), kodiMedium.get('isWatched'))
-        elif source == 'betaseries' or source is None and bsMedium.get('isWatched'):
+        elif self._needsToSynchronizeKodiMedium(kodiMedium, bsMedium, source):
             self.kodiRepo.updateWatchedStatus(kodiMedium.get('id'), bsMedium.get('isWatched'))
 
     def _initializeEndpoints(self):
@@ -52,14 +52,32 @@ class WatchSynchro:
         events = self.bsRepo.retrieveUpdatedIdsFrom(None, 1) or [{}]
         self.cacheRepo.setBetaseriesEndpoint(events[0].get('endpoint'))
 
-    def _retrieveById(self, Media, id):
+    @staticmethod
+    def _doestNotNeedToSynchronize(kodiMedium, bsMedium, source):
+        return not kodiMedium \
+            or not bsMedium \
+            or kodiMedium.get('isWatched') == bsMedium.get('isWatched')
+
+    @staticmethod
+    def _needsToSynchronizeBetaseriesMedium(kodiMedium, bsMedium, source):
+        return source == 'kodi' \
+            or source is None and kodiMedium.get('isWatched')
+
+    @staticmethod
+    def _needsToSynchronizeKodiMedium(kodiMedium, bsMedium, source):
+        return source == 'betaseries' \
+            or source is None and bsMedium.get('isWatched')
+
+    @staticmethod
+    def _retrieveById(media, mediumId):
         return next(
-            (Medium for Medium in Media if Medium.get('id') == id),
+            (medium for medium in media if medium.get('id') == mediumId),
             None
         )
 
-    def _retrieveByTmdbId(self, Media, tmdbId):
+    @staticmethod
+    def _retrieveByTmdbId(media, tmdbId):
         return next(
-            (Medium for Medium in Media if Medium.get('tmdbId') == tmdbId),
+            (medium for medium in media if medium.get('tmdbId') == tmdbId),
             None
         )
