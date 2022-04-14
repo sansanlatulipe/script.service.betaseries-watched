@@ -109,7 +109,8 @@ class MovieRepositoryShould(unittest.TestCase):
             'profile': 1
         })
 
-    def _buildBsMovieObject(self, status):
+    @staticmethod
+    def _buildBsMovieObject(status):
         return {
             'movie': {
                 'id': 5,
@@ -120,7 +121,8 @@ class MovieRepositoryShould(unittest.TestCase):
             }
         }
 
-    def _buildMovieEntity(self, isWatched):
+    @staticmethod
+    def _buildMovieEntity(isWatched):
         return {
             'id': 5,
             'tmdbId': 1005,
@@ -193,7 +195,8 @@ class BearerRepositoryShould(unittest.TestCase):
         self.assertIsNone(self.http.bearer)
         self.assertFalse(authenticated)
 
-    def _buildDeviceToken(self):
+    @staticmethod
+    def _buildDeviceToken():
         return {
             'expires_in': 15,
             'interval': 5,
