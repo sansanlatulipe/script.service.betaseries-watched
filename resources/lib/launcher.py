@@ -11,13 +11,8 @@ class Launcher:
         self._dialogAuthentication(device)
         self.container.get('authentication').finalize(device)
 
-    def fromScratch(self):
-        if self._isMovieSynchronizationReady():
-            self.container.get('movie.sync').scanAll()
-
-    def fromLastCheckpoint(self):
-        if self._isMovieSynchronizationReady():
-            self.container.get('movie.sync').scanRecentlyUpdated()
+    def synchronize(self):
+        self.container.get('daemon.sync').run()
 
     def _dialogAuthentication(self, device):
         addon = self.container.get('addon')
@@ -28,14 +23,3 @@ class Launcher:
                 device['user_code']
             ).encode('utf-8')
         )
-
-    def _dialogStartFromScratch(self):
-        addon = self.container.get('addon')
-        Dialog().notification(
-            addon.getLocalizedString(21000).encode('utf-8'),
-            addon.getLocalizedString(21001).encode('utf-8')
-        )
-
-    def _isMovieSynchronizationReady(self):
-        return (self.container.get('authentication').isAuthenticated()
-                and self.container.settings.canSynchronizeMovies())

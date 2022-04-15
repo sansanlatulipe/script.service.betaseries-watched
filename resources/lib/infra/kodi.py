@@ -2,6 +2,10 @@ import json
 from resources.lib.infra import xbmcmod
 
 
+class Monitor(xbmcmod.Monitor):
+    pass
+
+
 class JsonRPC:
     def call(self, method, data=None, fields=None, limit=None):
         params = data.copy() if isinstance(data, dict) else {}

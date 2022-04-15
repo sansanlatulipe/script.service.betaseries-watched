@@ -1,5 +1,5 @@
-from resources.lib.adapter import kodi as appliKodi
-from resources.lib.adapter import betaseries as appliBetaseries
+from resources.lib.adapter import kodi as adapterKodi
+from resources.lib.adapter import betaseries as adapterBetaseries
 from resources.lib.adapter import cache
 from resources.lib.adapter import settings
 from resources.lib.infra import kodi as infraKodi
@@ -30,7 +30,7 @@ class Container:
         )
 
     def _initBetaseriesBearerRepository(self):
-        return appliBetaseries.BearerRepository(
+        return adapterBetaseries.BearerRepository(
             self.get('cache.repository'),
             self.get('betaseries.http')
         )
@@ -41,7 +41,7 @@ class Container:
         )
 
     def _initBetaseriesMovieRepository(self):
-        return appliBetaseries.MovieRepository(
+        return adapterBetaseries.MovieRepository(
             self.settings.getBetaseriesNotifications(),
             self.get('betaseries.http')
         )
@@ -52,12 +52,25 @@ class Container:
             xbmcmod.SimpleCache()
         )
 
+    def _initKodiMonitor(self):
+        return infraKodi.Monitor()
+
     def _initKodiJsonrpc(self):
         return infraKodi.JsonRPC()
 
     def _initKodiMovieRepository(self):
-        return appliKodi.MovieRepository(
+        return adapterKodi.MovieRepository(
             self.get('kodi.jsonrpc')
+        )
+
+    def _initDaemonSync(self):
+        return sync.Deamon(
+            self.settings,
+            self.get('kodi.monitor'),
+            self.get('authentication'),
+            {
+                'movies': self.get('movie.sync')
+            }
         )
 
     def _initMovieSync(self):

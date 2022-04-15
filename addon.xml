@@ -5,7 +5,6 @@
 		<import addon="script.module.simplecache" version="1.0.14" />
 	</requires>
 
-	<extension point="xbmc.python.script" library="addon.py" />
 	<extension point="xbmc.service" library="service.py" />
 
 	<extension point="xbmc.addon.metadata">
