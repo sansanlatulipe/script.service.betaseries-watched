@@ -21,19 +21,6 @@ class MovieRepository:
             response.get('result').get('movies')
         ))
 
-    def retrieveUpdatedIdsFrom(self, endpoint, limit=100):
-        response = self.jsonrpc.call(
-            'VideoLibrary.GetRecentlyAddedMovies',
-            {},
-            ['dateadded']
-        )
-        return [
-            {
-                'id': event.get('movieid'),
-                'endpoint': event.get('dateadded')
-            } for event in response.get('result').get('movies')[::-1]
-        ]
-
     def updateWatchedStatus(self, movieId, isWatched):
         self.jsonrpc.call(
             'VideoLibrary.SetMovieDetails',
