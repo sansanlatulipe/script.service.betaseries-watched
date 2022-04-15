@@ -7,11 +7,7 @@ from resources.lib.adapter.betaseries import BearerRepository
 class MovieRepositoryShould(unittest.TestCase):
     @mock.patch('resources.lib.infra.betaseries.Http')
     def setUp(self, http):
-        self.config = {
-            'notify_mail': False,
-            'notify_twitter': False,
-            'update_profile': False
-        }
+        self.config = {}
         self.http = http
         self.repo = MovieRepository(self.config, self.http)
 
@@ -81,6 +77,9 @@ class MovieRepositoryShould(unittest.TestCase):
         )
 
     def test_change_movie_status_to_0_when_updating_to_unwatched(self):
+        self.config['mail'] = lambda: False
+        self.config['twitter'] = lambda: False
+        self.config['profile'] = lambda: False
         self.http.post = mock.Mock()
 
         self.repo.updateWatchedStatus(5, False)
@@ -94,9 +93,9 @@ class MovieRepositoryShould(unittest.TestCase):
         })
 
     def test_change_movie_status_to_1_when_updating_to_watched(self):
-        self.config['notify_mail'] = True
-        self.config['notify_twitter'] = True
-        self.config['update_profile'] = True
+        self.config['mail'] = lambda: True
+        self.config['twitter'] = lambda: True
+        self.config['profile'] = lambda: True
         self.http.post = mock.Mock()
 
         self.repo.updateWatchedStatus(5, True)

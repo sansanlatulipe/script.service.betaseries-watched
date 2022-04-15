@@ -10,15 +10,12 @@ class Settings:
     def getBetaseriesApiKey(self):
         return self.configparser['Betaseries']
 
-    def canSynchronizeMovies(self):
-        return self.addon.getSetting('sync_movies') == 'true'
-
-    def canSynchronizeTvShows(self):
-        return self.addon.getSetting('sync_tvshows') == 'true'
+    def canSynchronize(self, kind):
+        return self.addon.getSetting('sync_' + kind) == 'true'
 
     def getBetaseriesNotifications(self):
         return {
-            'notify_mail': self.addon.getSetting('notify_mail') == 'true',
-            'notify_twitter': self.addon.getSetting('notify_twitter') == 'true',
-            'update_profile': self.addon.getSetting('update_profile') == 'true'
+            'mail': lambda: self.addon.getSetting('notify_mail') == 'true',
+            'twitter': lambda: self.addon.getSetting('notify_twitter') == 'true',
+            'profile': lambda: self.addon.getSetting('update_profile') == 'true'
         }

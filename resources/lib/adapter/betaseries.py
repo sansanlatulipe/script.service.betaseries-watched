@@ -45,9 +45,9 @@ class MovieRepository:
             {
                 'id': movieId,
                 'state': 1 if isWatched else 0,
-                'mail': 1 if self.config.get('notify_mail') else 0,
-                'twitter': 1 if self.config.get('notify_twitter') else 0,
-                'profile': 1 if self.config.get('update_profile') else 0
+                'mail': 1 if self.config.get('mail')() else 0,
+                'twitter': 1 if self.config.get('twitter')() else 0,
+                'profile': 1 if self.config.get('profile')() else 0
             }
         )
 
