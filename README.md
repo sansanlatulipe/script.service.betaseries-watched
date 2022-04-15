@@ -32,11 +32,7 @@ Secondly, for each updates in Betaseries timeline (watched or unwatched), duplic
 
 ### Technical logic
 
-There is several ways to start this add-ons:
-* A service (`service.py`) that regularly checks updates from Betaseries and Kodi
-* An executable (`addon.py`)
-  * By default, it rescans the entire Kodi library and synchronizes with Betaseries on-demand
-  * With the option "authentication", it initializes the connection with Betaseries API
+The add-on is launched from `service.py`.
 
 Except for the entry points, all code can be found in the directory `resources/lib/`:
 * `launcher.py`: launcher functions
