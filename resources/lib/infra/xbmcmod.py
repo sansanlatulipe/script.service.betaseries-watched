@@ -10,6 +10,9 @@ try:
     from xbmcgui import DialogProgressBG
     from simplecache import SimpleCache
 except ImportError:
+    import os
+
+
     LOGDEBUG = 'DEBUG'
     LOGINFO = 'INFO'
     LOGWARNING = 'WARNING'
@@ -52,7 +55,10 @@ except ImportError:
             if key == 'id':
                 return 'addon.fake'
             if key == 'path':
-                return '.'
+                path = os.path.abspath(__file__)
+                for x in range(4):
+                    path = os.path.dirname(path)
+                return path
             return None
 
         def getSetting(self, key):
