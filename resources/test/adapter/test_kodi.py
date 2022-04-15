@@ -1,6 +1,6 @@
 from resources.test.testmod import unittest
 from resources.test.testmod import mock
-from resources.lib.appli.kodi import MovieRepository
+from resources.lib.adapter.kodi import MovieRepository
 
 
 class MovieRepositoryShould(unittest.TestCase):

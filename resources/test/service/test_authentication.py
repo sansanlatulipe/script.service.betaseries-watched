@@ -4,7 +4,7 @@ from resources.lib.service.authentication import Authentication
 
 
 class AuthenticationShould(unittest.TestCase):
-    @mock.patch('resources.lib.appli.betaseries.BearerRepository')
+    @mock.patch('resources.lib.adapter.betaseries.BearerRepository')
     def setUp(self, bearerRepo):
         self.bearerRepo = bearerRepo
         self.authentication = Authentication(self.bearerRepo)

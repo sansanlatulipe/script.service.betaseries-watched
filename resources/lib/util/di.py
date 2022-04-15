@@ -1,7 +1,7 @@
-from resources.lib.appli import kodi as appliKodi
-from resources.lib.appli import betaseries as appliBetaseries
-from resources.lib.appli import cache
-from resources.lib.appli import settings
+from resources.lib.adapter import kodi as appliKodi
+from resources.lib.adapter import betaseries as appliBetaseries
+from resources.lib.adapter import cache
+from resources.lib.adapter import settings
 from resources.lib.infra import kodi as infraKodi
 from resources.lib.infra import betaseries as infraBetaseries
 from resources.lib.infra import pymod

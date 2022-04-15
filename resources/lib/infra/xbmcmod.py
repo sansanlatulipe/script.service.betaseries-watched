@@ -56,7 +56,7 @@ except ImportError:
                 return 'addon.fake'
             if key == 'path':
                 path = os.path.abspath(__file__)
-                for x in range(4):
+                for i in range(4):
                     path = os.path.dirname(path)
                 return path
             return None

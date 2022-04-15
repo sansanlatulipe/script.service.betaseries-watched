@@ -4,9 +4,9 @@ from resources.lib.service.sync import WatchSynchro
 
 
 class WatchSynchroShould(unittest.TestCase):
-    @mock.patch('resources.lib.appli.betaseries.MovieRepository')
-    @mock.patch('resources.lib.appli.kodi.MovieRepository')
-    @mock.patch('resources.lib.appli.cache.Repository')
+    @mock.patch('resources.lib.adapter.betaseries.MovieRepository')
+    @mock.patch('resources.lib.adapter.kodi.MovieRepository')
+    @mock.patch('resources.lib.adapter.cache.Repository')
     def setUp(self, cacheRepo, kodiRepo, bsRepo):
         self.cacheRepo = cacheRepo
         self.kodiRepo = kodiRepo

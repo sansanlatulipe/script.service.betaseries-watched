@@ -1,7 +1,7 @@
 from resources.test.testmod import unittest
 from resources.test.testmod import mock
-from resources.lib.appli.betaseries import MovieRepository
-from resources.lib.appli.betaseries import BearerRepository
+from resources.lib.adapter.betaseries import MovieRepository
+from resources.lib.adapter.betaseries import BearerRepository
 
 
 class MovieRepositoryShould(unittest.TestCase):
@@ -132,7 +132,7 @@ class MovieRepositoryShould(unittest.TestCase):
 
 class BearerRepositoryShould(unittest.TestCase):
     @mock.patch('resources.lib.infra.betaseries.Http')
-    @mock.patch('resources.lib.appli.cache.Repository')
+    @mock.patch('resources.lib.adapter.cache.Repository')
     def setUp(self, cache, http):
         self.cache = cache
         self.http = http
