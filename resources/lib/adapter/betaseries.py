@@ -29,7 +29,7 @@ class MovieRepository:
             'nbpp': limit
         }
         if endpoint:
-            params['since_id'] = endpoint
+            params['last_id'] = endpoint
 
         response = self.http.get('/timeline/member', params)
         return [

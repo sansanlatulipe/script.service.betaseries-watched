@@ -18,16 +18,17 @@ class Deamon(xbmcmod.Monitor):
 
     def onNotification(self, sender, method, data):
         data = JsonRPC.decodeResponse(data)
-        library = self.libraries.get(data.get('type') + 's')
+        library = self.libraries.get(data.get('item', {}).get('type', '') + 's')
+        mediumId = data.get('item', {}).get('id')
         isNew = data.get('added')
 
         if method != 'VideoLibrary.OnUpdate' or not library:
             return
 
         if isNew:
-            library.synchronizeAddedOnKodi(data.get('id'))
+            library.synchronizeAddedOnKodi(mediumId)
         else:
-            library.synchronizeUpdatedOnKodi(data.get('id'))
+            library.synchronizeUpdatedOnKodi(mediumId)
 
     def _isSynchronizationReady(self, kind):
         return self.authentication.isAuthenticated() \
