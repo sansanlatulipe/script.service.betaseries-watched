@@ -22,15 +22,12 @@ jobs:
 
   unittest:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [2.7, 3.x]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Run unit tests
         uses: sansanlatulipe/github-actions/python-unittest@main
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.x
           coverage-path: ./resources/lib/
           coverage-threshold: 50

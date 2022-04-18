@@ -1,5 +1,6 @@
 import json
-from resources.lib.infra import pymod
+from http.client import HTTPConnection
+from urllib.parse import urlencode
 
 
 class Http:
@@ -8,11 +9,11 @@ class Http:
         self.clientId = config['client_id']
         self.clientSecret = config['client_secret']
         self.bearer = None
-        self.http = pymod.HTTPConnection(config['url'])
+        self.http = HTTPConnection(config['url'])
 
     def get(self, uri, data=None):
         if data:
-            uri += '?' + pymod.urlencode(data)
+            uri += '?' + urlencode(data)
         return self._call('GET', uri)
 
     def post(self, uri, data=None):

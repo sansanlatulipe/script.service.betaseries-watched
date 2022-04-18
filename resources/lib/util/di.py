@@ -1,10 +1,10 @@
+from configparser import ConfigParser
 from resources.lib.adapter import kodi as adapterKodi
 from resources.lib.adapter import betaseries as adapterBetaseries
 from resources.lib.adapter import cache
 from resources.lib.adapter import settings
 from resources.lib.infra import kodi as infraKodi
 from resources.lib.infra import betaseries as infraBetaseries
-from resources.lib.infra import pymod
 from resources.lib.infra import xbmcmod
 from resources.lib.service import authentication
 from resources.lib.service import sync
@@ -13,7 +13,7 @@ from resources.lib.service import sync
 class Container:
     def __init__(self):
         self.singletons = {}
-        self.settings = settings.Settings(self.get('addon'), pymod.ConfigParser())
+        self.settings = settings.Settings(self.get('addon'), ConfigParser())
 
     def get(self, service):
         if service not in self.singletons:
