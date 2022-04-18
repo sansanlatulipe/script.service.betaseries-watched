@@ -2,30 +2,30 @@ import json
 from resources.lib.infra import xbmcmod
 
 
-class Monitor(xbmcmod.Monitor):
-    pass
-
-
 class JsonRPC:
-    def call(self, method, data=None, fields=None, limit=None):
+    @staticmethod
+    def call(method, data=None, fields=None, limit=None):
+        request = JsonRPC.encodeRequest(method, data, fields, limit)
+        response = xbmcmod.executeJSONRPC(request)
+        return JsonRPC.decodeResponse(response)
+
+    @staticmethod
+    def encodeRequest(method, data, fields, limit):
         params = data.copy() if isinstance(data, dict) else {}
         if fields:
             params['properties'] = fields
         if limit:
             params['limits'] = {'start': 0, 'end': limit}
 
-        request = json.dumps({
+        return json.dumps({
             'jsonrpc': '2.0',
             'id': 1,
             'method': method,
             'params': params
         })
 
-        return self._decodeResponse(
-            xbmcmod.executeJSONRPC(request)
-        )
-
-    def _decodeResponse(self, response):
+    @staticmethod
+    def decodeResponse(response):
         response = json.loads(response)
         if response.get('error'):
             raise IOError(response.get('error'))

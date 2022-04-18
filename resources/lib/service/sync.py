@@ -1,16 +1,33 @@
-class Deamon:
-    def __init__(self, settings, monitor, authentication, libraries):
+from resources.lib.infra import xbmcmod
+from resources.lib.infra.kodi import JsonRPC
+
+
+class Deamon(xbmcmod.Monitor):
+    def __init__(self, settings, authentication, libraries):
+        super().__init__()
         self.settings = settings
-        self.monitor = monitor
         self.authentication = authentication
         self.libraries = libraries
 
     def run(self):
-        while not self.monitor.abortRequested():
+        while not self.abortRequested():
             for kind in self.libraries.keys():
                 if self._isSynchronizationReady(kind):
                     self.libraries.get(kind).synchronize()
-            self.monitor.waitForAbort(3600)
+            self.waitForAbort(3600)
+
+    def onNotification(self, sender, method, data):
+        data = JsonRPC.decodeResponse(data)
+        library = self.libraries.get(data.get('type') + 's')
+        isNew = data.get('added')
+
+        if method != 'VideoLibrary.OnUpdate' or not library:
+            return
+
+        if isNew:
+            library.synchronizeAddedOnKodi(data.get('id'))
+        else:
+            library.synchronizeUpdatedOnKodi(data.get('id'))
 
     def _isSynchronizationReady(self, kind):
         return self.authentication.isAuthenticated() \
@@ -25,20 +42,20 @@ class WatchSynchro:
 
     def synchronize(self):
         if not self.isInitialized():
-            self.scanAll()
+            self.synchronizeAll()
         else:
-            self.scanRecentlyUpdatedOnBetaseries()
+            self.synchronizeRecentlyUpdatedOnBetaseries()
 
     def isInitialized(self):
         return self.cacheRepo.getBetaseriesEndpoint() is not None
 
-    def scanAll(self):
+    def synchronizeAll(self):
         for kodiMedium in self.kodiRepo.retrieveAll():
             bsMedium = self.bsRepo.retrieveByTmdbId(kodiMedium.get('tmdbId'))
             self.synchronizeMedia(kodiMedium, bsMedium)
         self._initializeEndpoints()
 
-    def scanRecentlyUpdatedOnBetaseries(self):
+    def synchronizeRecentlyUpdatedOnBetaseries(self):
         endpoint = self.cacheRepo.getBetaseriesEndpoint()
         kodiMedia = self.kodiRepo.retrieveAll()
 
@@ -49,6 +66,16 @@ class WatchSynchro:
             self.synchronizeMedia(kodiMedium, bsMedium, source='betaseries')
 
         self.cacheRepo.setBetaseriesEndpoint(endpoint)
+
+    def synchronizeAddedOnKodi(self, kodiId):
+        kodiMedium = self.kodiRepo.retrieveById(kodiId)
+        bsMedium = self.bsRepo.retrieveByTmdbId(kodiMedium.get('tmdbId'))
+        self.synchronizeMedia(kodiMedium, bsMedium, source='betaseries')
+
+    def synchronizeUpdatedOnKodi(self, kodiId):
+        kodiMedium = self.kodiRepo.retrieveById(kodiId)
+        bsMedium = self.bsRepo.retrieveByTmdbId(kodiMedium.get('tmdbId'))
+        self.synchronizeMedia(kodiMedium, bsMedium, source='kodi')
 
     def synchronizeMedia(self, kodiMedium, bsMedium, source=None):
         if self._doestNotNeedToSynchronize(kodiMedium, bsMedium, source):

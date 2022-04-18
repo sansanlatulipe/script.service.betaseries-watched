@@ -34,7 +34,6 @@ class ContainerShould(unittest.TestCase):
             'betaseries.http',
             'betaseries.movie.repository',
             'cache.repository',
-            'kodi.monitor',
             'kodi.jsonrpc',
             'kodi.movie.repository',
             'daemon.sync',

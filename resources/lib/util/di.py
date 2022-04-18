@@ -52,9 +52,6 @@ class Container:
             xbmcmod.SimpleCache()
         )
 
-    def _initKodiMonitor(self):
-        return infraKodi.Monitor()
-
     def _initKodiJsonrpc(self):
         return infraKodi.JsonRPC()
 
@@ -66,7 +63,6 @@ class Container:
     def _initDaemonSync(self):
         return sync.Deamon(
             self.settings,
-            self.get('kodi.monitor'),
             self.get('authentication'),
             {
                 'movies': self.get('movie.sync')
