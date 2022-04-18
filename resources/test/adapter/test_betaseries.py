@@ -68,7 +68,7 @@ class MovieRepositoryShould(unittest.TestCase):
         self.http.get.assert_called_with('/timeline/member', {
             'types': 'film_add',
             'id': 'user_1',
-            'since_id': 12345,
+            'last_id': 12345,
             'nbpp': 100
         })
         self.assertEqual(

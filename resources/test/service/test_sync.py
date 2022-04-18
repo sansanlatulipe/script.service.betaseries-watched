@@ -11,7 +11,7 @@ class DeamonShould(unittest.TestCase):
         self.settings = settings
         self.authentication = authentication
         self.library = library
-        libraries = {'movies': library, 'tvshows': library}
+        libraries = {'movies': library, 'episodes': library}
         self.daemon = sync.Deamon(settings, authentication, libraries)
 
         self.daemon.abortRequested = mock.Mock(side_effect=[False, True])
@@ -48,21 +48,21 @@ class DeamonShould(unittest.TestCase):
 
         self.settings.canSynchronize.assert_has_calls([
             mock.call('movies'),
-            mock.call('tvshows')
+            mock.call('episodes')
         ])
         self.library.synchronize.assert_called_once()
 
     def test_ignore_all_notifications_but_video_updates(self):
         self.library.synchronizeUpdatedOnKodi = mock.Mock()
 
-        self.daemon.onNotification('me', 'Fake.Event', '{"type": "movie"}')
+        self.daemon.onNotification('me', 'Fake.Event', '{"item": {"type": "movie"}}')
 
         self.library.synchronizeUpdatedOnKodi.assert_not_called()
 
     def test_ignore_all_notifications_not_regarding_a_managed_library(self):
         self.library.synchronizeUpdatedOnKodi = mock.Mock()
 
-        self.daemon.onNotification('me', 'VideoLibrary.OnUpdate', '{"type": "music"}')
+        self.daemon.onNotification('me', 'VideoLibrary.OnUpdate', '{"item": {"type": "music"}}')
 
         self.library.synchronizeUpdatedOnKodi.assert_not_called()
 
@@ -70,9 +70,11 @@ class DeamonShould(unittest.TestCase):
         self.library.synchronizeAddedOnKodi = mock.Mock()
 
         self.daemon.onNotification('me', 'VideoLibrary.OnUpdate', """{
-            "id": "kodi-1",
             "added": true,
-            "type": "movie"
+            "item": {
+                "id": "kodi-1",
+                "type": "movie"
+            }
         }""")
 
         self.library.synchronizeAddedOnKodi.assert_called_once_with('kodi-1')
@@ -81,9 +83,11 @@ class DeamonShould(unittest.TestCase):
         self.library.synchronizeUpdatedOnKodi = mock.Mock()
 
         self.daemon.onNotification('me', 'VideoLibrary.OnUpdate', """{
-            "id": "kodi-1",
             "added": false,
-            "type": "movie"
+            "item": {
+                "id": "kodi-1",
+                "type": "movie"
+            }
         }""")
 
         self.library.synchronizeUpdatedOnKodi.assert_called_once_with('kodi-1')
