@@ -33,11 +33,14 @@ class ContainerShould(unittest.TestCase):
             'betaseries.bearer.repository',
             'betaseries.http',
             'betaseries.movie.repository',
+            'betaseries.episode.repository',
             'cache.repository',
             'kodi.jsonrpc',
             'kodi.movie.repository',
+            'kodi.episode.repository',
             'daemon.sync',
-            'movie.sync'
+            'movie.sync',
+            'episode.sync'
         ]
         for service in services:
             self.assertIsNotNone(self.container.get(service))

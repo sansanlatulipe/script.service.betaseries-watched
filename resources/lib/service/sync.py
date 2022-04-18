@@ -48,7 +48,7 @@ class WatchSynchro:
             self.synchronizeRecentlyUpdatedOnBetaseries()
 
     def isInitialized(self):
-        return self.cacheRepo.getBetaseriesEndpoint() is not None
+        return self.cacheRepo.getBetaseriesEndpoint(self.kodiRepo.getKind()) is not None
 
     def synchronizeAll(self):
         for kodiMedium in self.kodiRepo.retrieveAll():
@@ -57,7 +57,7 @@ class WatchSynchro:
         self._initializeEndpoints()
 
     def synchronizeRecentlyUpdatedOnBetaseries(self):
-        endpoint = self.cacheRepo.getBetaseriesEndpoint()
+        endpoint = self.cacheRepo.getBetaseriesEndpoint(self.kodiRepo.getKind())
         kodiMedia = self.kodiRepo.retrieveAll()
 
         for event in self.bsRepo.retrieveUpdatedIdsFrom(endpoint):
@@ -66,7 +66,7 @@ class WatchSynchro:
             kodiMedium = self._retrieveByTmdbId(kodiMedia, bsMedium.get('tmdbId'))
             self.synchronizeMedia(kodiMedium, bsMedium, source='betaseries')
 
-        self.cacheRepo.setBetaseriesEndpoint(endpoint)
+        self.cacheRepo.setBetaseriesEndpoint(self.kodiRepo.getKind(), endpoint)
 
     def synchronizeAddedOnKodi(self, kodiId):
         kodiMedium = self.kodiRepo.retrieveById(kodiId)
@@ -88,7 +88,7 @@ class WatchSynchro:
 
     def _initializeEndpoints(self):
         events = self.bsRepo.retrieveUpdatedIdsFrom(None, 1) or [{}]
-        self.cacheRepo.setBetaseriesEndpoint(events[0].get('endpoint'))
+        self.cacheRepo.setBetaseriesEndpoint(self.kodiRepo.getKind(), events[0].get('endpoint'))
 
     @staticmethod
     def _doestNotNeedToSynchronize(kodiMedium, bsMedium, source):

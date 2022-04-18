@@ -103,6 +103,8 @@ class WatchSynchroShould(unittest.TestCase):
         self.bsRepo = bsRepo
         self.sync = sync.WatchSynchro(self.cacheRepo, self.kodiRepo, self.bsRepo)
 
+        self.kodiRepo.getKind = mock.Mock(return_value='movie')
+
     def test_scan_all_when_synchronizing_for_the_first_time(self):
         self.cacheRepo.getBetaseriesEndpoint = mock.Mock(return_value=None)
 
@@ -131,7 +133,7 @@ class WatchSynchroShould(unittest.TestCase):
         self.sync.synchronizeAll()
 
         self.bsRepo.retrieveUpdatedIdsFrom.assert_called_once_with(None, 1)
-        self.cacheRepo.setBetaseriesEndpoint.assert_called_once_with('event_1')
+        self.cacheRepo.setBetaseriesEndpoint.assert_called_once_with('movie', 'event_1')
 
     def test_reset_cache_endpoints_if_none_exists_when_scanning_whole_library(self):
         self.bsRepo.retrieveUpdatedIdsFrom = mock.Mock(return_value=[])
@@ -139,7 +141,7 @@ class WatchSynchroShould(unittest.TestCase):
 
         self.sync.synchronizeAll()
 
-        self.cacheRepo.setBetaseriesEndpoint.assert_called_once_with(None)
+        self.cacheRepo.setBetaseriesEndpoint.assert_called_once_with('movie', None)
 
     def test_look_for_all_kodi_media_from_betaseries_when_scanning_whole_library(self):
         kodiMovies = [
@@ -178,7 +180,7 @@ class WatchSynchroShould(unittest.TestCase):
         self.sync.synchronizeRecentlyUpdatedOnBetaseries()
 
         self.bsRepo.retrieveUpdatedIdsFrom.assert_called_once_with('event_1')
-        self.cacheRepo.setBetaseriesEndpoint.assert_called_once_with('event_2')
+        self.cacheRepo.setBetaseriesEndpoint.assert_called_once_with('movie', 'event_2')
 
     def test_synchronize_kodi_and_betaseries_media_when_scanning_recent_updates(self):
         kodiMedium = self._buildMedium('kodi-1', isWatched=False)

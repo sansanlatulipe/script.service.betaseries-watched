@@ -4,8 +4,8 @@
         <setting type="action" label="30010" action="RunScript(script.service.betaseries-watched,authentication)" />
 
         <setting type="lsep" label="31000" />
-        <setting type="bool" label="31010" id="sync_movies" default="true" />
-        <setting type="bool" label="31020" id="sync_episodes" default="false" enable="false" />
+        <setting type="bool" label="31010" id="sync_movies" default="false" />
+        <setting type="bool" label="31020" id="sync_episodes" default="false" />
 
         <setting type="lsep" label="32000" />
         <setting type="bool" label="32010" id="notify_mail" default="false" />

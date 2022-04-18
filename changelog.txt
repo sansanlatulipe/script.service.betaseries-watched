@@ -1,1 +1,1 @@
-- Add service to update the synchronization every hour
+- Add service to synchronize episodes watch status

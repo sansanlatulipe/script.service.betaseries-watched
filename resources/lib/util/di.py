@@ -46,6 +46,11 @@ class Container:
             self.get('betaseries.http')
         )
 
+    def _initBetaseriesEpisodeRepository(self):
+        return adapterBetaseries.EpisodeRepository(
+            self.get('betaseries.http')
+        )
+
     def _initCacheRepository(self):
         return cache.Repository(
             self.settings.getAddonId(),
@@ -60,12 +65,18 @@ class Container:
             self.get('kodi.jsonrpc')
         )
 
+    def _initKodiEpisodeRepository(self):
+        return adapterKodi.EpisodeRepository(
+            self.get('kodi.jsonrpc')
+        )
+
     def _initDaemonSync(self):
         return sync.Deamon(
             self.settings,
             self.get('authentication'),
             {
-                'movies': self.get('movie.sync')
+                'movies': self.get('movie.sync'),
+                'episodes': self.get('episode.sync')
             }
         )
 
@@ -74,4 +85,11 @@ class Container:
             self.get('cache.repository'),
             self.get('kodi.movie.repository'),
             self.get('betaseries.movie.repository')
+        )
+
+    def _initEpisodeSync(self):
+        return sync.WatchSynchro(
+            self.get('cache.repository'),
+            self.get('kodi.episode.repository'),
+            self.get('betaseries.episode.repository')
         )

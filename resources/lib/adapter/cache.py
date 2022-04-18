@@ -1,6 +1,6 @@
 class Repository:
     def __init__(self, addonId, cache):
-        self.prefix = addonId + '.'
+        self.addonId = addonId
         self.cache = cache
 
     def getBetaseriesBearer(self):
@@ -9,17 +9,11 @@ class Repository:
     def setBetaseriesBearer(self, bearer):
         self.cache.set(self._cacheKey('betaseries.token'), bearer)
 
-    def getBetaseriesEndpoint(self):
-        return self.cache.get(self._cacheKey('betaseries.endpoint'))
+    def getBetaseriesEndpoint(self, kind):
+        return self.cache.get(self._cacheKey(f'betaseries.{kind}.endpoint'))
 
-    def setBetaseriesEndpoint(self, endpoint):
-        self.cache.set(self._cacheKey('betaseries.endpoint'), endpoint)
-
-    def getKodiEndpoint(self):
-        return self.cache.get(self._cacheKey('kodi.endpoint'))
-
-    def setKodiEndpoint(self, endpoint):
-        self.cache.set(self._cacheKey('kodi.endpoint'), endpoint)
+    def setBetaseriesEndpoint(self, kind, endpoint):
+        self.cache.set(self._cacheKey(f'betaseries.{kind}.endpoint'), endpoint)
 
     def _cacheKey(self, key):
-        return self.prefix + key
+        return f'{self.addonId}.{key}'
