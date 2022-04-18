@@ -1,5 +1,5 @@
 import json
-from http.client import HTTPConnection
+from http.client import HTTPSConnection
 from urllib.parse import urlencode
 
 
@@ -9,7 +9,7 @@ class Http:
         self.clientId = config['client_id']
         self.clientSecret = config['client_secret']
         self.bearer = None
-        self.http = HTTPConnection(config['url'])
+        self.http = HTTPSConnection(config['url'])
 
     def get(self, uri, data=None):
         if data:
