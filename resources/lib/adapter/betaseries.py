@@ -62,6 +62,61 @@ class MovieRepository:
         }
 
 
+class EpisodeRepository:
+    def __init__(self, http):
+        self.http = http
+
+    def retrieveById(self, episodeId):
+        response = self.http.get(
+            '/episodes/display',
+            {'id': episodeId}
+        )
+        return self._buildEntity(response)
+
+    def retrieveByTmdbId(self, tmdbId):
+        response = self.http.get(
+            '/episodes/display',
+            {'thetvdb_id': tmdbId}
+        )
+        return self._buildEntity(response)
+
+    def retrieveUpdatedIdsFrom(self, endpoint, limit=100):
+        user = self.http.get('/members/infos', {'summary': 'true'})
+
+        params = {
+            'types': 'markas',
+            'id': user.get('member').get('id'),
+            'nbpp': limit
+        }
+        if endpoint:
+            params['last_id'] = endpoint
+
+        response = self.http.get('/timeline/member', params)
+        return [
+            {
+                'id': event.get('ref_id'),
+                'endpoint': event.get('id')
+            } for event in response.get('events')[::-1]
+        ]
+
+    def updateWatchedStatus(self, episodeId, isWatched):
+        method = self.http.post if isWatched else self.http.delete
+        method(
+            '/episodes/watched',
+            {'id': episodeId}
+        )
+
+    def _buildEntity(self, response):
+        if 'id' not in response.get('episode', {}):
+            return None
+        episode = response.get('episode')
+        return {
+            'id': episode.get('id'),
+            'tmdbId': episode.get('thetvdb_id'),
+            'isWatched': episode.get('user', {}).get('seen', False)
+        }
+
+
 class BearerRepository:
     def __init__(self, cacheRepo, http):
         self.http = http

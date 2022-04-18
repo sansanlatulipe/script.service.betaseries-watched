@@ -1,7 +1,6 @@
 from resources.test.testmod import unittest
 from resources.test.testmod import mock
-from resources.lib.adapter.betaseries import MovieRepository
-from resources.lib.adapter.betaseries import BearerRepository
+from resources.lib.adapter import betaseries
 
 
 class MovieRepositoryShould(unittest.TestCase):
@@ -9,7 +8,7 @@ class MovieRepositoryShould(unittest.TestCase):
     def setUp(self, http):
         self.config = {}
         self.http = http
-        self.repo = MovieRepository(self.config, self.http)
+        self.repo = betaseries.MovieRepository(self.config, self.http)
 
     def test_build_movie_when_retrieving_with_known_id(self):
         self.http.get = mock.Mock(return_value=self._buildBsMovieObject(1))
@@ -129,13 +128,123 @@ class MovieRepositoryShould(unittest.TestCase):
         }
 
 
+class EpisodeRepositoryShould(unittest.TestCase):
+    @mock.patch('resources.lib.infra.betaseries.Http')
+    def setUp(self, http):
+        self.http = http
+        self.repo = betaseries.EpisodeRepository(self.http)
+
+    def test_build_episode_when_retrieving_with_known_id(self):
+        self.http.get = mock.Mock(return_value=self._buildBsEpisodeObject(True))
+
+        episode = self.repo.retrieveById(5)
+
+        self.http.get.assert_called_once_with('/episodes/display', {'id': 5})
+        self.assertEqual(
+            self._buildEpisodeEntity(True),
+            episode
+        )
+
+    def test_return_none_when_retrieving_with_unknown_id(self):
+        self.http.get = mock.Mock(return_value={})
+
+        episode = self.repo.retrieveById('unknown_id')
+
+        self.http.get.assert_called_once_with('/episodes/display', {'id': 'unknown_id'})
+        self.assertIsNone(episode)
+
+    def test_build_episode_when_retrieving_with_known_tmdb_id(self):
+        self.http.get = mock.Mock(return_value=self._buildBsEpisodeObject(False))
+
+        episode = self.repo.retrieveByTmdbId(1005)
+
+        self.http.get.assert_called_once_with('/episodes/display', {'thetvdb_id': 1005})
+        self.assertEqual(
+            self._buildEpisodeEntity(False),
+            episode
+        )
+
+    def test_retrieve_last_episode_event_when_retrieving_updates_with_limit_1(self):
+        self.http.get = mock.Mock(side_effect=[
+            {'member': {'id': 'user_1'}},
+            {'events': [{'ref_id': 5, 'id': 12345}]}
+        ])
+
+        events = self.repo.retrieveUpdatedIdsFrom(None, 1)
+
+        self.assertEqual(2, self.http.get.call_count)
+        self.http.get.assert_called_with('/timeline/member', {
+            'types': 'markas',
+            'id': 'user_1',
+            'nbpp': 1
+        })
+        self.assertEqual([{'id': 5, 'endpoint': 12345}], events)
+
+    def test_retrieve_episode_events_when_retrieving_updated_from_endpoint(self):
+        self.http.get = mock.Mock(side_effect=[
+            {'member': {'id': 'user_1'}},
+            {'events': [{'ref_id': 7, 'id': 12347}, {'ref_id': 6, 'id': 12346}]}
+        ])
+
+        events = self.repo.retrieveUpdatedIdsFrom(12345)
+
+        self.http.get.assert_called_with('/timeline/member', {
+            'types': 'markas',
+            'id': 'user_1',
+            'last_id': 12345,
+            'nbpp': 100
+        })
+        self.assertEqual(
+            [{'id': 6, 'endpoint': 12346}, {'id': 7, 'endpoint': 12347}],
+            events
+        )
+
+    def test_change_episode_status_when_updating_to_unwatched(self):
+        self.http.delete = mock.Mock()
+
+        self.repo.updateWatchedStatus(5, False)
+
+        self.http.delete.assert_called_once_with('/episodes/watched', {
+            'id': 5
+        })
+
+    def test_change_episode_status_when_updating_to_watched(self):
+        self.http.post = mock.Mock()
+
+        self.repo.updateWatchedStatus(5, True)
+
+        self.http.post.assert_called_once_with('/episodes/watched', {
+            'id': 5
+        })
+
+    @staticmethod
+    def _buildBsEpisodeObject(seen):
+        return {
+            'episode': {
+                'id': 5,
+                'thetvdb_id': 1005,
+                'user': {
+                    'seen': seen
+                }
+            }
+        }
+
+    @staticmethod
+    def _buildEpisodeEntity(isWatched):
+        return {
+            'id': 5,
+            'tmdbId': 1005,
+            'isWatched': isWatched
+        }
+
+
 class BearerRepositoryShould(unittest.TestCase):
     @mock.patch('resources.lib.infra.betaseries.Http')
     @mock.patch('resources.lib.adapter.cache.Repository')
     def setUp(self, cache, http):
         self.cache = cache
         self.http = http
-        self.repo = BearerRepository(self.cache, self.http)
+        self.repo = betaseries.BearerRepository(self.cache, self.http)
 
         self.http.clientId = 'client_id'
         self.http.clientSecret = 'client_secret'

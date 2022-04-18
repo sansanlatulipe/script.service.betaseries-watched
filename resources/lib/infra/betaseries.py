@@ -24,6 +24,11 @@ class Http:
             headers = None
         return self._call('POST', uri, data, headers)
 
+    def delete(self, uri, data=None):
+        if data:
+            uri += '?' + urlencode(data)
+        return self._call('DELETE', uri)
+
     def _call(self, method, uri, body=None, headers=None):
         self.http.request(
             method,
