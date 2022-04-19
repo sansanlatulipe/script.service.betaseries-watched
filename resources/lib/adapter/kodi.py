@@ -39,7 +39,7 @@ class MovieRepository:
             return None
         return {
             'id': movie.get('movieid'),
-            'tmdbId': movie.get('uniqueid').get('tmdb'),
+            'uniqueId': movie.get('uniqueid').get('tmdb'),
             'isWatched': movie.get('playcount') > 0
         }
 
@@ -85,6 +85,6 @@ class EpisodeRepository:
             return None
         return {
             'id': episode.get('episodeid'),
-            'tmdbId': episode.get('uniqueid').get('tvdb'),
+            'uniqueId': episode.get('uniqueid').get('tvdb'),
             'isWatched': episode.get('playcount') > 0
         }

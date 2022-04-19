@@ -13,10 +13,10 @@ class MovieRepository:
         )
         return self._buildEntity(response)
 
-    def retrieveByTmdbId(self, tmdbId):
+    def retrieveByUniqueId(self, uniqueId):
         response = self.http.get(
             '/movies/movie',
-            {'tmdb_id': tmdbId}
+            {'tmdb_id': uniqueId}
         )
         return self._buildEntity(response)
 
@@ -54,10 +54,13 @@ class MovieRepository:
     def _buildEntity(self, response):
         if 'id' not in response.get('movie', {}):
             return None
+
         movie = response.get('movie')
+
         return {
             'id': movie.get('id'),
-            'tmdbId': movie.get('tmdb_id'),
+            'uniqueId': movie.get('tmdb_id'),
+            'title': movie.get('title'),
             'isWatched': movie.get('user', {}).get('status') == 1
         }
 
@@ -73,10 +76,10 @@ class EpisodeRepository:
         )
         return self._buildEntity(response)
 
-    def retrieveByTmdbId(self, tmdbId):
+    def retrieveByUniqueId(self, uniqueId):
         response = self.http.get(
             '/episodes/display',
-            {'thetvdb_id': tmdbId}
+            {'thetvdb_id': uniqueId}
         )
         return self._buildEntity(response)
 
@@ -109,10 +112,16 @@ class EpisodeRepository:
     def _buildEntity(self, response):
         if 'id' not in response.get('episode', {}):
             return None
+
         episode = response.get('episode')
+        showTitle = episode.get('show', {}).get('title')
+        seasonNumber = episode.get('season')
+        episodeNumber = episode.get('episode')
+
         return {
             'id': episode.get('id'),
-            'tmdbId': episode.get('thetvdb_id'),
+            'uniqueId': episode.get('thetvdb_id'),
+            'title': f'{showTitle} S{seasonNumber:02d}E{episodeNumber:02d}',
             'isWatched': episode.get('user', {}).get('seen', False)
         }
 

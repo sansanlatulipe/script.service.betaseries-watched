@@ -90,7 +90,7 @@ class MovieRepositoryShould(unittest.TestCase):
     def _buildMovieEntity(isWatched):
         return {
             'id': 5,
-            'tmdbId': 1005,
+            'uniqueId': 1005,
             'isWatched': isWatched
         }
 
@@ -182,6 +182,6 @@ class EpisodeRepositoryShould(unittest.TestCase):
     def _buildEpisodeEntity(isWatched):
         return {
             'id': 5,
-            'tmdbId': 1005,
+            'uniqueId': 1005,
             'isWatched': isWatched
         }

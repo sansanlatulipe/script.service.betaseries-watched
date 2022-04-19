@@ -32,7 +32,7 @@ class MovieRepositoryShould(unittest.TestCase):
     def test_build_movie_when_retrieving_with_known_tmdb_id(self):
         self.http.get = mock.Mock(return_value=self._buildBsMovieObject(0))
 
-        movie = self.repo.retrieveByTmdbId(1005)
+        movie = self.repo.retrieveByUniqueId(1005)
 
         self.http.get.assert_called_once_with('/movies/movie', {'tmdb_id': 1005})
         self.assertEqual(
@@ -113,6 +113,7 @@ class MovieRepositoryShould(unittest.TestCase):
             'movie': {
                 'id': 5,
                 'tmdb_id': 1005,
+                'title': 'Fake movie',
                 'user': {
                     'status': status
                 }
@@ -123,7 +124,8 @@ class MovieRepositoryShould(unittest.TestCase):
     def _buildMovieEntity(isWatched):
         return {
             'id': 5,
-            'tmdbId': 1005,
+            'uniqueId': 1005,
+            'title': 'Fake movie',
             'isWatched': isWatched
         }
 
@@ -156,7 +158,7 @@ class EpisodeRepositoryShould(unittest.TestCase):
     def test_build_episode_when_retrieving_with_known_tmdb_id(self):
         self.http.get = mock.Mock(return_value=self._buildBsEpisodeObject(False))
 
-        episode = self.repo.retrieveByTmdbId(1005)
+        episode = self.repo.retrieveByUniqueId(1005)
 
         self.http.get.assert_called_once_with('/episodes/display', {'thetvdb_id': 1005})
         self.assertEqual(
@@ -223,6 +225,11 @@ class EpisodeRepositoryShould(unittest.TestCase):
             'episode': {
                 'id': 5,
                 'thetvdb_id': 1005,
+                'season': 1,
+                'episode': 2,
+                'show': {
+                    'title': 'Fake title'
+                },
                 'user': {
                     'seen': seen
                 }
@@ -233,7 +240,8 @@ class EpisodeRepositoryShould(unittest.TestCase):
     def _buildEpisodeEntity(isWatched):
         return {
             'id': 5,
-            'tmdbId': 1005,
+            'uniqueId': 1005,
+            'title': 'Fake title S01E02',
             'isWatched': isWatched
         }
 
