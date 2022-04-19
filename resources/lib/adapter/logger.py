@@ -35,8 +35,8 @@ class Logger:
             self.dialogProgress.create(self.addon.getAddonInfo('name'))
 
         self.dialogProgress.update(
-            percent,
-            self._buildLocalizedMessage(localizedLabel, msg)
+            percent=percent,
+            message=self._buildLocalizedMessage(localizedLabel, msg)
         )
 
     def yellError(self, msg, localizedLabel=None):

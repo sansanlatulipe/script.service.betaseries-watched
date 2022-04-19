@@ -60,7 +60,7 @@ class WatchSynchro:
         for mediaProgress, kodiMedium in enumerate(kodiMedia):
             bsMedium = self.bsRepo.retrieveByUniqueId(kodiMedium.get('uniqueId')) or {}
             self.synchronizeMedia(kodiMedium, bsMedium)
-            self.logger.yellProgress(mediaProgress * 100 / mediaCount, bsMedium.get('title'))
+            self.logger.yellProgress(mediaProgress * 100 // mediaCount, bsMedium.get('title'))
         self._initializeEndpoints()
 
         self.logger.yellInfo('End of synchronization', 21002)
@@ -78,7 +78,7 @@ class WatchSynchro:
             bsMedium = self.bsRepo.retrieveById(event.get('id'))
             kodiMedium = self._retrieveByUniqueId(kodiMedia, bsMedium.get('uniqueId'))
             self.synchronizeMedia(kodiMedium, bsMedium, source='betaseries')
-            self.logger.yellProgress(eventsProgress * 100 / eventsCount, bsMedium.get('title'))
+            self.logger.yellProgress(eventsProgress * 100 // eventsCount, bsMedium.get('title'))
         self.cacheRepo.setBetaseriesEndpoint(self.kodiRepo.getKind(), endpoint)
 
         self.logger.yellInfo('End of synchronization', 21002)
