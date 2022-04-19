@@ -2,6 +2,7 @@ from configparser import ConfigParser
 from resources.lib.adapter import kodi as adapterKodi
 from resources.lib.adapter import betaseries as adapterBetaseries
 from resources.lib.adapter import cache
+from resources.lib.adapter import logger
 from resources.lib.adapter import settings
 from resources.lib.infra import kodi as infraKodi
 from resources.lib.infra import betaseries as infraBetaseries
@@ -23,6 +24,13 @@ class Container:
 
     def _initAddon(self):
         return xbmcmod.Addon()
+
+    def _initLogger(self):
+        return logger.Logger(
+            self.get('addon'),
+            xbmcmod.Dialog,
+            xbmcmod.DialogProgressBG
+        )
 
     def _initAuthentication(self):
         return authentication.Authentication(
@@ -82,6 +90,7 @@ class Container:
 
     def _initMovieSync(self):
         return sync.WatchSynchro(
+            self.get('logger'),
             self.get('cache.repository'),
             self.get('kodi.movie.repository'),
             self.get('betaseries.movie.repository')
@@ -89,6 +98,7 @@ class Container:
 
     def _initEpisodeSync(self):
         return sync.WatchSynchro(
+            self.get('logger'),
             self.get('cache.repository'),
             self.get('kodi.episode.repository'),
             self.get('betaseries.episode.repository')

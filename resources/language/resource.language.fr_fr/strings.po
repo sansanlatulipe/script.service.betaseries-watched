@@ -27,12 +27,16 @@ msgstr ""
 "et saisir le code {1}"
 
 msgctxt "#21000"
-msgid "Dialog synchronization header"
-msgstr "Synchronisation avec Betaseries"
+msgid "Dialog full synchronization start"
+msgstr "Démarrage de la synchronisation complète..."
 
 msgctxt "#21001"
-msgid "Dialog synchronization message"
-msgstr "Démarrage du scan complet..."
+msgid "Dialog betaseries synchronization start"
+msgstr "Démarrage de la synchronisation Betaseries..."
+
+msgctxt "#21002"
+msgid "Dialog synchronization end"
+msgstr "Fin de la synchronisation"
 
 msgctxt "#30000"
 msgid "Settings"

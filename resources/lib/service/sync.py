@@ -36,7 +36,8 @@ class Deamon(xbmcmod.Monitor):
 
 
 class WatchSynchro:
-    def __init__(self, cacheRepo, kodiRepo, bsRepo):
+    def __init__(self, logger, cacheRepo, kodiRepo, bsRepo):
+        self.logger = logger
         self.cacheRepo = cacheRepo
         self.kodiRepo = kodiRepo
         self.bsRepo = bsRepo
@@ -51,32 +52,50 @@ class WatchSynchro:
         return self.cacheRepo.getBetaseriesEndpoint(self.kodiRepo.getKind()) is not None
 
     def synchronizeAll(self):
-        for kodiMedium in self.kodiRepo.retrieveAll():
-            bsMedium = self.bsRepo.retrieveByTmdbId(kodiMedium.get('tmdbId'))
+        self.logger.yellInfo('Starting full synchronization', 21000)
+
+        kodiMedia = self.kodiRepo.retrieveAll()
+        mediaCount = len(kodiMedia)
+
+        for mediaProgress, kodiMedium in enumerate(kodiMedia):
+            bsMedium = self.bsRepo.retrieveByUniqueId(kodiMedium.get('uniqueId')) or {}
             self.synchronizeMedia(kodiMedium, bsMedium)
+            self.logger.yellProgress(mediaProgress * 100 / mediaCount, bsMedium.get('title'))
         self._initializeEndpoints()
 
+        self.logger.yellInfo('End of synchronization', 21002)
+
     def synchronizeRecentlyUpdatedOnBetaseries(self):
+        self.logger.yellInfo('Starting Betaseries synchronization', 21001)
+
         endpoint = self.cacheRepo.getBetaseriesEndpoint(self.kodiRepo.getKind())
         kodiMedia = self.kodiRepo.retrieveAll()
+        bsEvents = self.bsRepo.retrieveUpdatedIdsFrom(endpoint)
+        eventsCount = len(bsEvents)
 
-        for event in self.bsRepo.retrieveUpdatedIdsFrom(endpoint):
+        for eventsProgress, event in enumerate(bsEvents):
             endpoint = event.get('endpoint')
             bsMedium = self.bsRepo.retrieveById(event.get('id'))
-            kodiMedium = self._retrieveByTmdbId(kodiMedia, bsMedium.get('tmdbId'))
+            kodiMedium = self._retrieveByUniqueId(kodiMedia, bsMedium.get('uniqueId'))
             self.synchronizeMedia(kodiMedium, bsMedium, source='betaseries')
-
+            self.logger.yellProgress(eventsProgress * 100 / eventsCount, bsMedium.get('title'))
         self.cacheRepo.setBetaseriesEndpoint(self.kodiRepo.getKind(), endpoint)
+
+        self.logger.yellInfo('End of synchronization', 21002)
 
     def synchronizeAddedOnKodi(self, kodiId):
         kodiMedium = self.kodiRepo.retrieveById(kodiId)
-        bsMedium = self.bsRepo.retrieveByTmdbId(kodiMedium.get('tmdbId'))
+        bsMedium = self.bsRepo.retrieveByUniqueId(kodiMedium.get('uniqueId'))
         self.synchronizeMedia(kodiMedium, bsMedium, source='betaseries')
+
+        self.logger.yellInfo(bsMedium.get('title'))
 
     def synchronizeUpdatedOnKodi(self, kodiId):
         kodiMedium = self.kodiRepo.retrieveById(kodiId)
-        bsMedium = self.bsRepo.retrieveByTmdbId(kodiMedium.get('tmdbId'))
+        bsMedium = self.bsRepo.retrieveByUniqueId(kodiMedium.get('uniqueId'))
         self.synchronizeMedia(kodiMedium, bsMedium, source='kodi')
+
+        self.logger.yellInfo(bsMedium.get('title'))
 
     def synchronizeMedia(self, kodiMedium, bsMedium, source=None):
         if self._doestNotNeedToSynchronize(kodiMedium, bsMedium, source):
@@ -107,8 +126,8 @@ class WatchSynchro:
             or source is None and bsMedium.get('isWatched')
 
     @staticmethod
-    def _retrieveByTmdbId(media, tmdbId):
+    def _retrieveByUniqueId(media, uniqueId):
         for medium in media:
-            if medium.get('tmdbId') == tmdbId:
+            if medium.get('uniqueId') == uniqueId:
                 return medium
         return None
