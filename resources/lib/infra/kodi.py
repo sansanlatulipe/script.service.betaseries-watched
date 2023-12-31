@@ -27,6 +27,8 @@ class JsonRPC:
     @staticmethod
     def decodeResponse(response):
         response = json.loads(response)
+        if not isinstance(response, dict):
+            response = {}
         if response.get('error'):
             raise IOError(response.get('error'))
         return response
