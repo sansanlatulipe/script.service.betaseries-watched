@@ -17,15 +17,17 @@ class Deamon(xbmcmod.Monitor):
             self.waitForAbort(3600)
 
     def onNotification(self, sender, method, data):
+        if method != 'VideoLibrary.OnUpdate':
+            return
+
         data = JsonRPC.decodeResponse(data)
-        library = self.libraries.get(data.get('item', {}).get('type', '') + 's')
+        library = self._retrieveLibraryFromType(data.get('item', {}).get('type', ''))
         mediumId = data.get('item', {}).get('id')
         isNew = data.get('added')
 
-        if method != 'VideoLibrary.OnUpdate' or not library:
-            return
-
-        if isNew:
+        if not library:
+            pass
+        elif isNew:
             library.synchronizeAddedOnKodi(mediumId)
         else:
             library.synchronizeUpdatedOnKodi(mediumId)
@@ -34,6 +36,8 @@ class Deamon(xbmcmod.Monitor):
         return self.authentication.isAuthenticated() \
             and self.settings.canSynchronize(kind)
 
+    def _retrieveLibraryFromType(self, type):
+        return self.libraries.get(itemType + 's')
 
 class WatchSynchro:
     def __init__(self, logger, cacheRepo, kodiRepo, bsRepo):
