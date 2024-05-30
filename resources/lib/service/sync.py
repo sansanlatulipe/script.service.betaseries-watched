@@ -36,7 +36,7 @@ class Deamon(xbmcmod.Monitor):
         return self.authentication.isAuthenticated() \
             and self.settings.canSynchronize(kind)
 
-    def _retrieveLibraryFromType(self, type):
+    def _retrieveLibraryFromType(self, itemType):
         return self.libraries.get(itemType + 's')
 
 class WatchSynchro:
