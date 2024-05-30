@@ -39,6 +39,7 @@ class Deamon(xbmcmod.Monitor):
     def _retrieveLibraryFromType(self, itemType):
         return self.libraries.get(itemType + 's')
 
+
 class WatchSynchro:
     def __init__(self, logger, cacheRepo, kodiRepo, bsRepo):
         self.logger = logger
