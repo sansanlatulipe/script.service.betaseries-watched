@@ -140,7 +140,7 @@ class BearerRepository:
 
     def createFromDevice(self, device):
         maxRetries = device.get('expires_in') // device.get('interval') - 1
-        for retry in range(maxRetries):
+        for _ in range(maxRetries):
             time.sleep(device.get('interval'))
             response = self._initializeFromDevice(device)
             if self._validate(response):
