@@ -18,7 +18,6 @@ jobs:
         uses: sansanlatulipe/github-actions/python-lint@main
         with:
           python-version: 3.x
-          exclude-path: resources/test
 
   unittest:
     runs-on: ubuntu-latest

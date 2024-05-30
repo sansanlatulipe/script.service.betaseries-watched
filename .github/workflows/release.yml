@@ -14,5 +14,5 @@ jobs:
       - name: Create addon
         uses: sansanlatulipe/github-actions/kodi-release@main
         with:
-          kodi-version: matrix
+          kodi-version: nexus
           github-token: ${{ secrets.GITHUB_TOKEN }}
