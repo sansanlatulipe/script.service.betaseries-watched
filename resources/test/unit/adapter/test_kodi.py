@@ -1,5 +1,5 @@
-from resources.test.testmod import unittest
-from resources.test.testmod import mock
+from resources.test.unit.testmod import unittest
+from resources.test.unit.testmod import mock
 from resources.lib.adapter import kodi
 
 
