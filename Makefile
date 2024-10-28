@@ -25,12 +25,10 @@ build: clean
 	@(cd $(BUILD_DIR) && zip -r $(ADDON_ASSET) $(ADDON_NAME))
 	@rm -r $(ADDON_BUILD)
 
-test-html: test
-	@coverage html --fail-under=70 --skip-empty --show-contexts --directory=/var/www/html/coverage
-
 test: lint unit-test service-test
 	@coverage combine
 	@coverage report --fail-under=70 --skip-empty
+	@coverage html --fail-under=70 --skip-empty --show-contexts --directory=/var/www/html/coverage
 
 lint:
 	flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
@@ -38,10 +36,12 @@ lint:
 	pylint .
 
 unit-test:
-	coverage run --context=unit-test --data-file=.coverage.unit-test --branch --source=resources/lib/ --module pytest
+	coverage run --context=unit-test --data-file=.coverage.unit-test --branch --source=resources/lib/ --module \
+		pytest
 
 service-test:
-	coverage run --context=service-test --data-file=.coverage.service-test --branch --source=resources/lib/ --module behave
+	coverage run --context=service-test --data-file=.coverage.service-test --branch --source=resources/lib/ --module \
+		behave --format=html --outfile=/var/www/html/behave-report.html --format=pretty
 
 clean:
 	@$(RM) -r .pytest_cache .coverage* $(BUILD_DIR)
