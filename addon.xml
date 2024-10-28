@@ -14,7 +14,7 @@
 		<description lang="fr_FR">Ce service met à jour automatiquement votre profil sur le site Betaseries lorsque vous venez de finir de regarder un épisode ou nu film dans Kodi</description>
 		<platform>all</platform>
 		<license>GPL-2.0-or-later</license>
-		<source>https://github.com/SansanLaTulipe/script.service.betaseries-watched</source>
+		<source>https://github.com/SansanLaTulipe/{{ addon_name }}</source>
 		<news>
 			{{ addon_changelog }}
 		</news>

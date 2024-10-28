@@ -5,21 +5,26 @@ SHELL ["/bin/bash", "-c"]
 ENV PYTHONUNBUFFERED=1
 
 EXPOSE 22
+EXPOSE 80
+
 VOLUME ["/app"]
 
 WORKDIR /app
+COPY requirements.txt .
+COPY requirements-dev.txt .
 
 RUN apt-get update
 # Install dev dependancies
-RUN apt-get install -y --no-install-recommends \
-    make
-RUN python3 -m pip install --upgrade pip
-RUN if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-RUN if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+RUN apt-get install -y make zip
+RUN python3 -m pip install --upgrade pip \
+    && pip install -r requirements.txt \
+    && pip install -r requirements-dev.txt
+# Setup nginx
+RUN apt-get install -y nginx
 # Setup SSH with root login
 RUN apt-get install -y openssh-server \
     && mkdir /var/run/sshd \
     && echo 'root:password' | chpasswd \
     && sed -i 's/\#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
-ENTRYPOINT ["/usr/sbin/sshd", "-D"]
+ENTRYPOINT ["/bin/bash", "-c", "service nginx start && /usr/sbin/sshd -D"]
