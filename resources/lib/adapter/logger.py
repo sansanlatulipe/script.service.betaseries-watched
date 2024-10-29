@@ -10,10 +10,10 @@ class Logger:
         self.dialogProgress = None
 
     def info(self, msg):
-        xbmcmod.log(msg, xbmcmod.LOGINFO)
+        self._log(msg, xbmcmod.LOGINFO)
 
     def error(self, msg):
-        xbmcmod.log(msg, xbmcmod.LOGERROR)
+        self._log(msg, xbmcmod.LOGERROR)
 
     def yellInfo(self, msg, localizedLabel=None):
         self.info(msg)
@@ -57,3 +57,6 @@ class Logger:
         if self.dialogProgress:
             self.dialogProgress.close()
             self.dialogProgress = None
+
+    def _log(self, msg, loglvl):
+        xbmcmod.log(f'{self.addon.getAddonInfo('id')}: {msg}', loglvl)
