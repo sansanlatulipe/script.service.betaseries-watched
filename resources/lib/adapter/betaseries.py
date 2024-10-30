@@ -39,12 +39,12 @@ class MovieRepository:
             } for event in response.get('events')[::-1]
         ]
 
-    def updateWatchedStatus(self, movieId, isWatched):
+    def updateWatchedStatus(self, movie):
         self.http.post(
             '/movies/movie',
             {
-                'id': movieId,
-                'state': 1 if isWatched else 0,
+                'id': movie.get('id'),
+                'state': 1 if movie.get('isWatched') else 0,
                 'mail': 1 if self.config.get('mail')() else 0,
                 'twitter': 1 if self.config.get('twitter')() else 0,
                 'profile': 1 if self.config.get('profile')() else 0
@@ -102,11 +102,11 @@ class EpisodeRepository:
             } for event in response.get('events')[::-1]
         ]
 
-    def updateWatchedStatus(self, episodeId, isWatched):
-        method = self.http.post if isWatched else self.http.delete
+    def updateWatchedStatus(self, episode):
+        method = self.http.post if episode.get('isWatched') else self.http.delete
         method(
             '/episodes/watched',
-            {'id': episodeId}
+            {'id': episode.get('id')}
         )
 
     def _buildEntity(self, response):

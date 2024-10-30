@@ -59,20 +59,22 @@ class MovieRepositoryShould(unittest.TestCase):
     def test_change_movie_playcount_to_0_when_updating_to_unwatched(self):
         self.jsonrpc.call = mock.Mock()
 
-        self.repo.updateWatchedStatus(5, False)
+        movie = self._buildMovieEntity(False)
+        self.repo.updateWatchedStatus(movie)
 
         self.jsonrpc.call.assert_called_once_with('VideoLibrary.SetMovieDetails', {
-            'movieid': 5,
+            'movieid': movie.get('id'),
             'playcount': 0
         })
 
     def test_change_movie_playcount_to_1_when_updating_to_watched(self):
         self.jsonrpc.call = mock.Mock()
 
-        self.repo.updateWatchedStatus(5, True)
+        movie = self._buildMovieEntity(True)
+        self.repo.updateWatchedStatus(movie)
 
         self.jsonrpc.call.assert_called_once_with('VideoLibrary.SetMovieDetails', {
-            'movieid': 5,
+            'movieid': movie.get('id'),
             'playcount': 1
         })
 
@@ -151,20 +153,22 @@ class EpisodeRepositoryShould(unittest.TestCase):
     def test_change_episode_playcount_to_0_when_updating_to_unwatched(self):
         self.jsonrpc.call = mock.Mock()
 
-        self.repo.updateWatchedStatus(5, False)
+        episode = self._buildEpisodeEntity(False)
+        self.repo.updateWatchedStatus(episode)
 
         self.jsonrpc.call.assert_called_once_with('VideoLibrary.SetEpisodeDetails', {
-            'episodeid': 5,
+            'episodeid': episode.get('id'),
             'playcount': 0
         })
 
     def test_change_episode_playcount_to_1_when_updating_to_watched(self):
         self.jsonrpc.call = mock.Mock()
 
-        self.repo.updateWatchedStatus(5, True)
+        episode = self._buildEpisodeEntity(True)
+        self.repo.updateWatchedStatus(episode)
 
         self.jsonrpc.call.assert_called_once_with('VideoLibrary.SetEpisodeDetails', {
-            'episodeid': 5,
+            'episodeid': episode.get('id'),
             'playcount': 1
         })
 

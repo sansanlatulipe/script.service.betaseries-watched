@@ -41,7 +41,7 @@ unit-test:
 
 service-test:
 	coverage run --context=service-test --data-file=.coverage.service-test --branch --source=resources/lib/ --module \
-		behave $(HTML_REPORT) --format=pretty
+		behave $(HTML_REPORT) --format=pretty $(BEHAVE_OPTIONS)
 
 clean:
 	@$(RM) -r .build/ .coverage* .pytest_cache/

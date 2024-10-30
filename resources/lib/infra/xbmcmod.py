@@ -21,11 +21,11 @@ except ImportError:
     NOTIFICATION_WARNING = 'WARNING'
     NOTIFICATION_ERROR = 'ERROR'
 
-    def log(msg, lvl):
-        print(lvl, msg)
+    def log(msg, level):
+        print(level, msg)
 
 
-    def executeJSONRPC(query):
+    def executeJSONRPC(jsonrpccommand):
         return '{"result":{"movies":[],"moviedetails":{}}}'
 
 
@@ -66,24 +66,24 @@ except ImportError:
         def getSetting(self, key):
             return self.settings.get(key)
 
-        def getLocalizedString(self, labelId):
-            return 'Message {}'.format(labelId)
+        def getLocalizedString(self, key):
+            return 'Message {}'.format(key)
 
 
     class Dialog:
-        def ok(self, heading, text):
-            print('{} > {}'.format(heading, text))
+        def ok(self, heading, message):
+            print('{} > {}'.format(heading, message))
 
-        def notification(self, heading, text, icon=NOTIFICATION_INFO, time=5000, sound=True):
-            print('[{}] {} > {}'.format(icon, heading, text))
+        def notification(self, heading, message, icon=NOTIFICATION_INFO, time=5000, sound=True):
+            print('[{}] {} > {}'.format(icon, heading, message))
 
 
     class DialogProgressBG:
-        def create(self, heading, msg):
-            print('{} > {}'.format(heading, msg))
+        def create(self, heading, message=None):
+            print('{} > {}'.format(heading, message))
 
-        def update(self, percent, heading=None, msg=None):
-            print('{} > {} ({}%)'.format(heading, msg, percent))
+        def update(self, percent, heading=None, message=None):
+            print('{} > {} ({}%)'.format(heading, message, percent))
 
         def close(self):
             pass

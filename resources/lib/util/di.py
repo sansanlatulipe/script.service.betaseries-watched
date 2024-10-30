@@ -25,13 +25,6 @@ class Container:
     def _initAddon(self):
         return xbmcmod.Addon()
 
-    def _initLogger(self):
-        return logger.Logger(
-            self.get('addon'),
-            xbmcmod.Dialog,
-            xbmcmod.DialogProgressBG
-        )
-
     def _initAuthentication(self):
         return authentication.Authentication(
             self.get('betaseries.bearer.repository')
@@ -40,6 +33,11 @@ class Container:
     def _initBetaseriesBearerRepository(self):
         return adapterBetaseries.BearerRepository(
             self.get('cache.repository'),
+            self.get('betaseries.http')
+        )
+
+    def _initBetaseriesEpisodeRepository(self):
+        return adapterBetaseries.EpisodeRepository(
             self.get('betaseries.http')
         )
 
@@ -54,28 +52,10 @@ class Container:
             self.get('betaseries.http')
         )
 
-    def _initBetaseriesEpisodeRepository(self):
-        return adapterBetaseries.EpisodeRepository(
-            self.get('betaseries.http')
-        )
-
     def _initCacheRepository(self):
         return cache.Repository(
             self.settings.getAddonId(),
             xbmcmod.SimpleCache()
-        )
-
-    def _initKodiJsonrpc(self):
-        return infraKodi.JsonRPC()
-
-    def _initKodiMovieRepository(self):
-        return adapterKodi.MovieRepository(
-            self.get('kodi.jsonrpc')
-        )
-
-    def _initKodiEpisodeRepository(self):
-        return adapterKodi.EpisodeRepository(
-            self.get('kodi.jsonrpc')
         )
 
     def _initDaemonSync(self):
@@ -88,18 +68,38 @@ class Container:
             }
         )
 
-    def _initMovieSync(self):
-        return sync.WatchSynchro(
-            self.get('logger'),
-            self.get('cache.repository'),
-            self.get('kodi.movie.repository'),
-            self.get('betaseries.movie.repository')
-        )
-
     def _initEpisodeSync(self):
         return sync.WatchSynchro(
             self.get('logger'),
             self.get('cache.repository'),
             self.get('kodi.episode.repository'),
             self.get('betaseries.episode.repository')
+        )
+
+    def _initKodiEpisodeRepository(self):
+        return adapterKodi.EpisodeRepository(
+            self.get('kodi.jsonrpc')
+        )
+
+    def _initKodiJsonrpc(self):
+        return infraKodi.JsonRPC()
+
+    def _initKodiMovieRepository(self):
+        return adapterKodi.MovieRepository(
+            self.get('kodi.jsonrpc')
+        )
+
+    def _initLogger(self):
+        return logger.Logger(
+            self.get('addon'),
+            xbmcmod.Dialog,
+            xbmcmod.DialogProgressBG
+        )
+
+    def _initMovieSync(self):
+        return sync.WatchSynchro(
+            self.get('logger'),
+            self.get('cache.repository'),
+            self.get('kodi.movie.repository'),
+            self.get('betaseries.movie.repository')
         )

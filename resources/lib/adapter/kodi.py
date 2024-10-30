@@ -25,12 +25,12 @@ class MovieRepository:
             response.get('result').get('movies')
         ))
 
-    def updateWatchedStatus(self, movieId, isWatched):
+    def updateWatchedStatus(self, movie):
         self.jsonrpc.call(
             'VideoLibrary.SetMovieDetails',
             {
-                'movieid': movieId,
-                'playcount': 1 if isWatched else 0
+                'movieid': movie.get('id'),
+                'playcount': 1 if movie.get('isWatched') else 0
             }
         )
 
@@ -71,12 +71,12 @@ class EpisodeRepository:
             response.get('result').get('episodes')
         ))
 
-    def updateWatchedStatus(self, episodeId, isWatched):
+    def updateWatchedStatus(self, episode):
         self.jsonrpc.call(
             'VideoLibrary.SetEpisodeDetails',
             {
-                'episodeid': episodeId,
-                'playcount': 1 if isWatched else 0
+                'episodeid': episode.get('id'),
+                'playcount': 1 if episode.get('isWatched') else 0
             }
         )
 

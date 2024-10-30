@@ -81,10 +81,11 @@ class MovieRepositoryShould(unittest.TestCase):
         self.config['profile'] = lambda: False
         self.http.post = mock.Mock()
 
-        self.repo.updateWatchedStatus(5, False)
+        movie = self._buildMovieEntity(False)
+        self.repo.updateWatchedStatus(movie)
 
         self.http.post.assert_called_once_with('/movies/movie', {
-            'id': 5,
+            'id': movie.get('id'),
             'state': 0,
             'mail': 0,
             'twitter': 0,
@@ -97,10 +98,11 @@ class MovieRepositoryShould(unittest.TestCase):
         self.config['profile'] = lambda: True
         self.http.post = mock.Mock()
 
-        self.repo.updateWatchedStatus(5, True)
+        movie = self._buildMovieEntity(True)
+        self.repo.updateWatchedStatus(movie)
 
         self.http.post.assert_called_once_with('/movies/movie', {
-            'id': 5,
+            'id': movie.get('id'),
             'state': 1,
             'mail': 1,
             'twitter': 1,
@@ -204,19 +206,21 @@ class EpisodeRepositoryShould(unittest.TestCase):
     def test_change_episode_status_when_updating_to_unwatched(self):
         self.http.delete = mock.Mock()
 
-        self.repo.updateWatchedStatus(5, False)
+        episode = self._buildEpisodeEntity(False)
+        self.repo.updateWatchedStatus(episode)
 
         self.http.delete.assert_called_once_with('/episodes/watched', {
-            'id': 5
+            'id': episode.get('id')
         })
 
     def test_change_episode_status_when_updating_to_watched(self):
         self.http.post = mock.Mock()
 
-        self.repo.updateWatchedStatus(5, True)
+        episode = self._buildEpisodeEntity(True)
+        self.repo.updateWatchedStatus(episode)
 
         self.http.post.assert_called_once_with('/episodes/watched', {
-            'id': 5
+            'id': episode.get('id')
         })
 
     @staticmethod

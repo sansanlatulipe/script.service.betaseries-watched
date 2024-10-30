@@ -106,9 +106,11 @@ class WatchSynchro:
         if self._doestNotNeedToSynchronize(kodiMedium, bsMedium, source):
             pass
         elif self._needsToUpdateBetaseriesMedium(kodiMedium, bsMedium, source):
-            self.bsRepo.updateWatchedStatus(bsMedium.get('id'), kodiMedium.get('isWatched'))
+            bsMedium['isWatched'] = kodiMedium.get('isWatched')
+            self.bsRepo.updateWatchedStatus(bsMedium)
         elif self._needsToUpdateKodiMedium(kodiMedium, bsMedium, source):
-            self.kodiRepo.updateWatchedStatus(kodiMedium.get('id'), bsMedium.get('isWatched'))
+            kodiMedium['isWatched'] = bsMedium.get('isWatched')
+            self.kodiRepo.updateWatchedStatus(kodiMedium)
 
     def _initializeEndpoints(self):
         events = self.bsRepo.retrieveUpdatedIdsFrom(None, 1) or [{}]
