@@ -14,7 +14,6 @@ from resources.lib.service import sync
 class Container:
     def __init__(self):
         self.singletons = {}
-        self.settings = settings.Settings(self.get('addon'), ConfigParser())
 
     def get(self, service):
         if service not in self.singletons:
@@ -43,24 +42,24 @@ class Container:
 
     def _initBetaseriesHttp(self):
         return infraBetaseries.Http(
-            self.settings.getBetaseriesApiKey()
+            self.get('settings').getBetaseriesApiKey()
         )
 
     def _initBetaseriesMovieRepository(self):
         return adapterBetaseries.MovieRepository(
-            self.settings.getBetaseriesNotifications(),
+            self.get('settings').getBetaseriesNotifications(),
             self.get('betaseries.http')
         )
 
     def _initCacheRepository(self):
         return cache.Repository(
-            self.settings.getAddonId(),
+            self.get('settings').getAddonId(),
             xbmcmod.SimpleCache()
         )
 
     def _initDaemonSync(self):
         return sync.Deamon(
-            self.settings,
+            self.get('settings'),
             self.get('authentication'),
             {
                 'movies': self.get('movie.sync'),
@@ -103,3 +102,6 @@ class Container:
             self.get('kodi.movie.repository'),
             self.get('betaseries.movie.repository')
         )
+
+    def _initSettings(self):
+        return settings.Settings(self.get('addon'), ConfigParser())
