@@ -10,7 +10,7 @@ class MovieRepository:
         response = self.jsonrpc.call(
             'VideoLibrary.GetMovieDetails',
             {'movieid': movieId},
-            ['uniqueid', 'playcount']
+            ['uniqueid', 'sorttitle', 'playcount']
         )
         return self._buildEntity(response.get('result', {}).get('moviedetails'))
 
@@ -18,7 +18,7 @@ class MovieRepository:
         response = self.jsonrpc.call(
             'VideoLibrary.GetMovies',
             {},
-            ['uniqueid', 'playcount']
+            ['uniqueid', 'sorttitle', 'playcount']
         )
         return list(map(
             self._buildEntity,
@@ -40,6 +40,7 @@ class MovieRepository:
         return {
             'id': movie.get('movieid'),
             'uniqueId': movie.get('uniqueid').get('tmdb'),
+            'title': movie.get('sorttitle'),
             'isWatched': movie.get('playcount') > 0
         }
 
@@ -56,7 +57,7 @@ class EpisodeRepository:
         response = self.jsonrpc.call(
             'VideoLibrary.GetEpisodeDetails',
             {'episodeid': episodeId},
-            ['uniqueid', 'playcount']
+            ['uniqueid', 'sorttitle', 'playcount']
         )
         return self._buildEntity(response.get('result', {}).get('episodedetails'))
 
@@ -64,7 +65,7 @@ class EpisodeRepository:
         response = self.jsonrpc.call(
             'VideoLibrary.GetEpisodes',
             {},
-            ['uniqueid', 'playcount']
+            ['uniqueid', 'sorttitle', 'playcount']
         )
         return list(map(
             self._buildEntity,
@@ -86,5 +87,6 @@ class EpisodeRepository:
         return {
             'id': episode.get('episodeid'),
             'uniqueId': episode.get('uniqueid').get('tvdb'),
+            'title': episode.get('sorttitle'),
             'isWatched': episode.get('playcount') > 0
         }

@@ -18,7 +18,7 @@ class MovieRepositoryShould(unittest.TestCase):
         self.jsonrpc.call.assert_called_once_with(
             'VideoLibrary.GetMovieDetails',
             {'movieid': 5},
-            ['uniqueid', 'playcount']
+            ['uniqueid', 'sorttitle', 'playcount']
         )
         self.assertEqual(
             self._buildMovieEntity(True),
@@ -33,7 +33,7 @@ class MovieRepositoryShould(unittest.TestCase):
         self.jsonrpc.call.assert_called_once_with(
             'VideoLibrary.GetMovieDetails',
             {'movieid': 'unknown_id'},
-            ['uniqueid', 'playcount']
+            ['uniqueid', 'sorttitle', 'playcount']
         )
         self.assertIsNone(movie)
 
@@ -49,7 +49,7 @@ class MovieRepositoryShould(unittest.TestCase):
         self.jsonrpc.call.assert_called_once_with(
             'VideoLibrary.GetMovies',
             {},
-            ['uniqueid', 'playcount']
+            ['uniqueid', 'sorttitle', 'playcount']
         )
         self.assertEqual(
             [self._buildMovieEntity(True), self._buildMovieEntity(False)],
@@ -85,6 +85,7 @@ class MovieRepositoryShould(unittest.TestCase):
             'uniqueid': {
                 'tmdb': 1005
             },
+            'sorttitle': 'Movie title',
             'playcount': playcount
         }
 
@@ -93,6 +94,7 @@ class MovieRepositoryShould(unittest.TestCase):
         return {
             'id': 5,
             'uniqueId': 1005,
+            'title': 'Movie title',
             'isWatched': isWatched
         }
 
@@ -112,7 +114,7 @@ class EpisodeRepositoryShould(unittest.TestCase):
         self.jsonrpc.call.assert_called_once_with(
             'VideoLibrary.GetEpisodeDetails',
             {'episodeid': 5},
-            ['uniqueid', 'playcount']
+            ['uniqueid', 'sorttitle', 'playcount']
         )
         self.assertEqual(
             self._buildEpisodeEntity(True),
@@ -127,7 +129,7 @@ class EpisodeRepositoryShould(unittest.TestCase):
         self.jsonrpc.call.assert_called_once_with(
             'VideoLibrary.GetEpisodeDetails',
             {'episodeid': 'unknown_id'},
-            ['uniqueid', 'playcount']
+            ['uniqueid', 'sorttitle', 'playcount']
         )
         self.assertIsNone(episode)
 
@@ -143,7 +145,7 @@ class EpisodeRepositoryShould(unittest.TestCase):
         self.jsonrpc.call.assert_called_once_with(
             'VideoLibrary.GetEpisodes',
             {},
-            ['uniqueid', 'playcount']
+            ['uniqueid', 'sorttitle', 'playcount']
         )
         self.assertEqual(
             [self._buildEpisodeEntity(True), self._buildEpisodeEntity(False)],
@@ -179,6 +181,7 @@ class EpisodeRepositoryShould(unittest.TestCase):
             'uniqueid': {
                 'tvdb': 1005
             },
+            'sorttitle': 'Episode title S01E01',
             'playcount': playcount
         }
 
@@ -187,5 +190,6 @@ class EpisodeRepositoryShould(unittest.TestCase):
         return {
             'id': 5,
             'uniqueId': 1005,
+            'title': 'Episode title S01E01',
             'isWatched': isWatched
         }
