@@ -1,5 +1,5 @@
+from unittest import mock
 from resources.lib.util.di import Container
-from resources.test.unit.testmod import mock
 
 
 class MockContainer(Container):
