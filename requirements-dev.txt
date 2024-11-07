@@ -2,5 +2,6 @@ behave
 behave-html-pretty-formatter
 coverage
 flake8
+kodi-addon-checker
 pylint
 pytest

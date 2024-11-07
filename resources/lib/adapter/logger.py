@@ -59,4 +59,4 @@ class Logger:
             self.dialogProgress = None
 
     def _log(self, msg, loglvl):
-        xbmcmod.log(f'{self.addon.getAddonInfo('id')}: {msg}', loglvl)
+        xbmcmod.log('{}: {}'.format(self.addon.getAddonInfo('id'), msg), loglvl)

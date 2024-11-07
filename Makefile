@@ -1,25 +1,23 @@
-ADDON_NAME := kodi.addon.name
+ADDON_NAME := script.service.betaseries-watched
 ADDON_VERSION := 0.0.0
-ADDON_PRERELEASE := $(shell echo $(ADDON_VERSION) | grep -Eq -- '\+.+$$' && echo true || echo false)
 ADDON_ASSET := $(ADDON_NAME)_$(ADDON_VERSION).zip
 
-all: lint test build
+KODI_VERSION := matrix
 
-github-output:
-	@echo "addon_name=$(ADDON_NAME)"
-	@echo "addon_version=$(ADDON_VERSION)"
-	@echo "addon_prerelease=$(ADDON_PRERELEASE)"
-	@echo "addon_asset=$(ADDON_ASSET)"
+all: lint test build
 
 build: clean
 	@mkdir -p .build/$(ADDON_NAME)
 	@cp -r * .build/$(ADDON_NAME)
 	@(cd .build/$(ADDON_NAME) && rm -r behave.ini Dockerfile.dev Makefile pylintrc requirements*.txt resources/test/)
+	@find .build/$(ADDON_NAME) -type d -exec chmod u=rwx,go=rx {} +
+	@find .build/$(ADDON_NAME) -type f -exec chmod u=rw,go=r {} +
 	@sed -i .build/$(ADDON_NAME)/addon.xml \
 	    -e "s/{{ addon_name }}/$(ADDON_NAME)/" \
 	    -e "s/{{ addon_version }}/$(ADDON_VERSION)/" \
 	    -e "/{{ addon_changelog }}/r changelog.txt" \
 	    -e "s/^.*{{ addon_changelog }}/$(ADDON_VERSION) (`date +'%Y-%m-%d'`)/"
+	@(cd .build/$(ADDON_NAME) && kodi-addon-checker --branch $(KODI_VERSION))
 	@(cd .build && zip -r $(ADDON_ASSET) $(ADDON_NAME))
 	@rm -r .build/$(ADDON_NAME)
 
