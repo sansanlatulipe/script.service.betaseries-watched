@@ -106,4 +106,7 @@ class Container:
         )
 
     def _initSettings(self):
-        return settings.Settings(self.get('addon'), ConfigParser())
+        return settings.Settings(
+            self.get('addon'),
+            ConfigParser()
+        )
