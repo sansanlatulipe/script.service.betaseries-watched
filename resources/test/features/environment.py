@@ -3,22 +3,22 @@ from resources.lib.util.di import Container
 
 
 class MockContainer(Container):
-    @mock.patch('resources.lib.infra.xbmcmod.Addon')
+    @mock.patch('xbmcaddon.Addon')
     def _initAddon(self, addon):
-        addon.getAddonInfo.side_effect = lambda *args, **kwargs: {
+        addon().getAddonInfo.side_effect = lambda *args, **kwargs: {
             'id': 'addon.name',
             'name': 'Addon name',
             'path': '.'
         }.get(args[0])
-        addon.getSetting.side_effect = lambda *args, **kwargs: {
+        addon().getSetting.side_effect = lambda *args, **kwargs: {
             'sync_movies': 'true',
-            'sync_tvshows': 'false',
+            'sync_tvshows': 'true',
             'notify_mail': 'false',
             'notify_twitter': 'false',
             'update_profile': 'false'
         }.get(args[0])
 
-        return addon
+        return addon()
 
     @mock.patch('resources.lib.adapter.betaseries.EpisodeRepository')
     def _initBetaseriesEpisodeRepository(self, repo):

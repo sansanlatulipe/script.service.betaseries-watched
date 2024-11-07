@@ -1,4 +1,6 @@
 from configparser import ConfigParser
+import xbmcaddon
+import xbmcgui
 from resources.lib.adapter import kodi as adapterKodi
 from resources.lib.adapter import betaseries as adapterBetaseries
 from resources.lib.adapter import cache
@@ -22,7 +24,7 @@ class Container:
         return self.singletons[service]
 
     def _initAddon(self):
-        return xbmcmod.Addon()
+        return xbmcaddon.Addon()
 
     def _initAuthentication(self):
         return authentication.Authentication(
@@ -91,8 +93,8 @@ class Container:
     def _initLogger(self):
         return logger.Logger(
             self.get('addon'),
-            xbmcmod.Dialog,
-            xbmcmod.DialogProgressBG
+            xbmcgui.Dialog,
+            xbmcgui.DialogProgressBG
         )
 
     def _initMovieSync(self):

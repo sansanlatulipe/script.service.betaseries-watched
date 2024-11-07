@@ -3,5 +3,6 @@ behave-html-pretty-formatter
 coverage
 flake8
 kodi-addon-checker
+kodistubs
 pylint
 pytest

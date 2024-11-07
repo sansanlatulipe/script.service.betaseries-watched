@@ -1,12 +1,12 @@
 import json
-from resources.lib.infra import xbmcmod
+import xbmc
 
 
 class JsonRPC:
     @staticmethod
     def call(method, data=None, fields=None, limit=None):
         request = JsonRPC.encodeRequest(method, data, fields, limit)
-        response = xbmcmod.executeJSONRPC(request)
+        response = xbmc.executeJSONRPC(request)
         return JsonRPC.decodeResponse(response)
 
     @staticmethod

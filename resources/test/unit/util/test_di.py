@@ -26,22 +26,26 @@ class ContainerShould(unittest.TestCase):
         self.container._initFakeService.assert_called_once_with()
         self.assertEqual(service1, service2)
 
-    def test_contain_the_following_services(self):
+    @mock.patch('xbmcaddon.Addon')
+    def test_contain_the_following_services(self, addon):
+        addon().getAddonInfo.return_value = '.'
+
         services = [
             'addon',
-            'logger',
             'authentication',
             'betaseries.bearer.repository',
+            'betaseries.episode.repository',
             'betaseries.http',
             'betaseries.movie.repository',
-            'betaseries.episode.repository',
             'cache.repository',
+            'daemon.sync',
+            'episode.sync',
+            'kodi.episode.repository',
             'kodi.jsonrpc',
             'kodi.movie.repository',
-            'kodi.episode.repository',
-            'daemon.sync',
+            'logger',
             'movie.sync',
-            'episode.sync'
+            'settings'
         ]
         for service in services:
             self.assertIsNotNone(self.container.get(service))

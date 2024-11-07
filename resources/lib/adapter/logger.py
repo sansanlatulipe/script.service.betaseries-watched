@@ -1,4 +1,5 @@
-from resources.lib.infra import xbmcmod
+import xbmc
+import xbmcgui
 
 
 class Logger:
@@ -10,10 +11,10 @@ class Logger:
         self.dialogProgress = None
 
     def info(self, msg):
-        self._log(msg, xbmcmod.LOGINFO)
+        self._log(msg, xbmc.LOGINFO)
 
     def error(self, msg):
-        self._log(msg, xbmcmod.LOGERROR)
+        self._log(msg, xbmc.LOGERROR)
 
     def yellInfo(self, msg, localizedLabel=None):
         self.info(msg)
@@ -22,7 +23,7 @@ class Logger:
         self.dialogBuilder().notification(
             self.addon.getAddonInfo('name'),
             self._buildLocalizedMessage(localizedLabel, msg),
-            icon=xbmcmod.NOTIFICATION_INFO,
+            icon=xbmcgui.NOTIFICATION_INFO,
             sound=False
         )
 
@@ -46,7 +47,7 @@ class Logger:
         self.dialogBuilder().notification(
             self.addon.getAddonInfo('name'),
             self._buildLocalizedMessage(localizedLabel, msg),
-            icon=xbmcmod.NOTIFICATION_ERROR,
+            icon=xbmcgui.NOTIFICATION_ERROR,
             sound=True
         )
 
@@ -59,4 +60,4 @@ class Logger:
             self.dialogProgress = None
 
     def _log(self, msg, loglvl):
-        xbmcmod.log('{}: {}'.format(self.addon.getAddonInfo('id'), msg), loglvl)
+        xbmc.log('{}: {}'.format(self.addon.getAddonInfo('id'), msg), loglvl)

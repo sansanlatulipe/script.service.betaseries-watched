@@ -4,7 +4,7 @@ from resources.lib.adapter import settings
 
 
 class SettingsShould(unittest.TestCase):
-    @mock.patch('resources.lib.infra.xbmcmod.Addon')
+    @mock.patch('xbmcaddon.Addon')
     def setUp(self, addon):
         self.addon = addon
         self.configparser = mock.Mock()

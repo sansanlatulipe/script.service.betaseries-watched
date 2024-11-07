@@ -1,8 +1,8 @@
-from resources.lib.infra import xbmcmod
+import xbmc
 from resources.lib.infra.kodi import JsonRPC
 
 
-class Deamon(xbmcmod.Monitor):
+class Deamon(xbmc.Monitor):
     def __init__(self, settings, authentication, libraries):
         super().__init__()
         self.settings = settings
