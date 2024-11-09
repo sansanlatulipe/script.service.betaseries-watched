@@ -27,7 +27,7 @@ test-html: test
 test: unit-test service-test
 	@coverage combine
 	@coverage report --fail-under=70 --skip-empty
-	@coverage xml --skip-empty -o .coverage.xml
+	@coverage xml --skip-empty -o coverage.xml
 	@[ -z "$(HTML_REPORT)" ] || coverage html --fail-under=70 --skip-empty --show-contexts --directory=/var/www/html/coverage
 
 lint:
@@ -44,5 +44,5 @@ service-test:
 	    behave $(HTML_REPORT) --format=pretty $(BEHAVE_OPTIONS)
 
 clean:
-	@rm -rf .build/ .coverage* .pytest_cache/
+	@rm -rf .build/ coverage.xml .coverage* .pytest_cache/
 	@find . -type d -name __pycache__ -exec rm -r {} +
