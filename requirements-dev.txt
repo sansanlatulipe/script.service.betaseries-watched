@@ -6,3 +6,4 @@ kodi-addon-checker
 kodistubs
 pylint
 pytest
+qrcode

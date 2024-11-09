@@ -1,5 +1,8 @@
 import json
+from tempfile import NamedTemporaryFile
+import qrcode
 import xbmc
+import xbmcgui
 
 
 class JsonRPC:
@@ -32,3 +35,52 @@ class JsonRPC:
         if response.get('error'):
             raise IOError(response.get('error'))
         return response
+
+
+class QrcodeDialog(xbmcgui.WindowDialog):
+    def __init__(self, heading, message, url):
+        super().__init__()
+        self._heading = heading
+        self._message = message
+        self._url = url
+        self._qrcodeFile = None
+
+    def show(self):
+        self._buildQrcode()
+        self._buildControls()
+        super().show()
+
+    def close(self):
+        super().close()
+        self._qrcodeFile.close()
+
+    def onAction(self, action):
+        self.close()
+
+    def _buildQrcode(self):
+        # pylint: disable=consider-using-with
+        self._qrcodeFile = NamedTemporaryFile(suffix='.png')
+        qrcodeImage = qrcode.make(self._url)
+        qrcodeImage.save(self._qrcodeFile.name)
+
+    def _buildControls(self):
+        self.addControls(xbmcgui.ControlLabel(
+            x=0, y=0,
+            width=self.getWidth(), height=25,
+            label=self._heading,
+            alignment=xbmcgui.XBFONT_CENTER_X
+        ))
+
+        self.addControl(xbmcgui.ControlLabel(
+            x=0, y=50,
+            width=self.getWidth(), height=50,
+            label=self._message,
+            alignment=xbmcgui.XBFONT_CENTER_X
+        ))
+
+        size = min(self.getWidth(), self.getHeight()) - 200
+        self.addControl(xbmcgui.ControlImage(
+            x=(self.getWidth() - size) / 2, y=150,
+            width=size, height=size,
+            filename=self._qrcodeFile.name
+        ))

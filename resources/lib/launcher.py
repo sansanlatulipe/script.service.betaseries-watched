@@ -1,4 +1,4 @@
-from xbmcgui import Dialog
+from resources.lib.infra.kodi import QrcodeDialog
 from resources.lib.util.di import Container
 
 
@@ -16,10 +16,12 @@ class Launcher:
 
     def _dialogAuthentication(self, device):
         addon = self.container.get('addon')
-        Dialog().ok(
+        dialog = QrcodeDialog(
             addon.getLocalizedString(20000).encode('utf-8'),
             addon.getLocalizedString(20001).format(
                 device['verification_url'],
                 device['user_code']
-            ).encode('utf-8')
+            ).encode('utf-8'),
+            device['verification_url']
         )
+        dialog.show()

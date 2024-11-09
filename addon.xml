@@ -3,6 +3,7 @@
 	<requires>
 		<import addon="xbmc.python" version="3.0.0" />
 		<import addon="script.module.simplecache" version="1.0.14" />
+		<import addon="script.module.qrcode" version="6.1.0" />
 	</requires>
 
 	<extension point="xbmc.service" library="service.py" />
