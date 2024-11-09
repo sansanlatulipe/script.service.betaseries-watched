@@ -2,5 +2,6 @@
 /.coverage*
 /.pytest_cache
 /.vscode
+/coverage.xml
 __pycache__
 *.pyc
