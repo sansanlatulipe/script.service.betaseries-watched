@@ -21,23 +21,22 @@ class Deamon(xbmc.Monitor):
             return
 
         data = JsonRPC.decodeResponse(data)
-        library = self._retrieveLibraryFromType(data.get('item', {}).get('type', ''))
+        libraryKind = self._buildLibraryKindFromType(data.get('item', {}).get('type', ''))
         mediumId = data.get('item', {}).get('id')
         isNew = data.get('added')
 
-        if not library:
-            pass
-        elif isNew:
-            library.synchronizeAddedOnKodi(mediumId)
-        else:
-            library.synchronizeUpdatedOnKodi(mediumId)
+        if self._isSynchronizationReady(libraryKind):
+            if isNew:
+                self.libraries.get(libraryKind).synchronizeAddedOnKodi(mediumId)
+            else:
+                self.libraries.get(libraryKind).synchronizeUpdatedOnKodi(mediumId)
 
     def _isSynchronizationReady(self, kind):
         return self.authentication.isAuthenticated() \
             and self.settings.canSynchronize(kind)
 
-    def _retrieveLibraryFromType(self, itemType):
-        return self.libraries.get(itemType + 's')
+    def _buildLibraryKindFromType(self, itemType):
+        return itemType + 's'
 
 
 class WatchSynchro:

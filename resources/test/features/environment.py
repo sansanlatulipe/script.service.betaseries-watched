@@ -12,7 +12,7 @@ class MockContainer(Container):
         }.get(args[0])
         addon().getSetting.side_effect = lambda *args, **kwargs: {
             'sync_movies': 'true',
-            'sync_tvshows': 'true',
+            'sync_episodes': 'true',
             'notify_mail': 'false',
             'notify_twitter': 'false',
             'update_profile': 'false'
@@ -20,12 +20,20 @@ class MockContainer(Container):
 
         return addon()
 
+    @mock.patch('resources.lib.adapter.betaseries.BearerRepository')
+    def _initBetaseriesBearerRepository(self, repo):
+        return repo
+
     @mock.patch('resources.lib.adapter.betaseries.EpisodeRepository')
     def _initBetaseriesEpisodeRepository(self, repo):
         return repo
 
     @mock.patch('resources.lib.adapter.betaseries.MovieRepository')
     def _initBetaseriesMovieRepository(self, repo):
+        return repo
+
+    @mock.patch('resources.lib.adapter.cache.Repository')
+    def _initCacheRepository(self, repo):
         return repo
 
     @mock.patch('resources.lib.adapter.kodi.EpisodeRepository')

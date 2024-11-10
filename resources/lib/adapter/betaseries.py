@@ -131,9 +131,18 @@ class BearerRepository:
         self.http = http
         self.cacheRepo = cacheRepo
 
-    def exists(self):
-        self.http.bearer = self.cacheRepo.getBetaseriesBearer()
-        return self.http.bearer is not None
+    def isActive(self):
+        if self._exists():
+            try:
+                self.http.get('/members/is_active')
+            except IOError:
+                self.http.bearer = None
+                self.cacheRepo.setBetaseriesBearer(self.http.bearer)
+        return self._exists()
+
+    def reset(self):
+        self.http.bearer = False
+        self.cacheRepo.setBetaseriesBearer(self.http.bearer)
 
     def createDeviceToken(self):
         return self.http.post('/oauth/device')
@@ -146,6 +155,14 @@ class BearerRepository:
             if self._validate(response):
                 return True
         return False
+
+    def _exists(self):
+        self.http.bearer = self.cacheRepo.getBetaseriesBearer()
+
+        if self.http.bearer is None:
+            return None
+
+        return self.http.bearer is not False
 
     def _initializeFromDevice(self, device):
         try:
@@ -161,6 +178,6 @@ class BearerRepository:
             return {}
 
     def _validate(self, response):
-        bearer = response.get('access_token') or response.get('token')
+        bearer = response.get('access_token') or response.get('token') or False
         self.cacheRepo.setBetaseriesBearer(bearer)
-        return self.exists()
+        return self._exists()

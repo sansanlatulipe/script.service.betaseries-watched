@@ -36,9 +36,11 @@ def step_given_a_medium_exists_in_repo(context, mediumType, repoType):
 
 @when('this {mediumType} triggers a Kodi notification')
 def step_when_kodi_notification_is_triggered(context, mediumType):
+    bearerRepoMock = context.dependencyInjector.get('betaseries.bearer.repository')
     kodiRepoMock = context.dependencyInjector.get(f'kodi.{mediumType}.repository')
     bsRepoMock = context.dependencyInjector.get(f'betaseries.{mediumType}.repository')
 
+    bearerRepoMock.isActive.return_value = True
     kodiRepoMock.retrieveById.return_value = _retrieveMediumFromRepo(context, 'Kodi')
     bsRepoMock.retrieveByUniqueId.return_value = _retrieveMediumFromRepo(context, 'BetaSeries')
 
@@ -54,19 +56,27 @@ def step_when_kodi_notification_is_triggered(context, mediumType):
 
 @when('the complementary scan runs to synchonize {mediumType}s')
 def step_when_run_complementary_scan_sync(context, mediumType):
+    cacheRepoMock = context.dependencyInjector.get('cache.repository')
+    bearerRepoMock = context.dependencyInjector.get('betaseries.bearer.repository')
     kodiRepoMock = context.dependencyInjector.get(f'kodi.{mediumType}.repository')
     bsRepoMock = context.dependencyInjector.get(f'betaseries.{mediumType}.repository')
 
+    cacheRepoMock.getBetaseriesEndpoint.return_value = 'endpoint-id'
+    bearerRepoMock.isActive.return_value = True
     kodiRepoMock.retrieveAll.return_value = [_retrieveMediumFromRepo(context, 'Kodi')]
     bsRepoMock.retrieveById.return_value = _retrieveMediumFromRepo(context, 'BetaSeries')
     bsRepoMock.retrieveUpdatedIdsFrom.return_value = [{}]
 
-    context.dependencyInjector.get(f'{mediumType}.sync').synchronizeRecentlyUpdatedOnBetaseries()
+    context.dependencyInjector.get(f'{mediumType}.sync').synchronize()
 
 
 @then('this {mediumType} should be marked as "{watchedMark}" on {repoType}')
 def step_then_assert_medium_should_have_watched_mark(context, mediumType, watchedMark, repoType):
-    assert _buildIsWatch(watchedMark) == _retrieveMediumFromRepo(context, repoType).get('isWatched')
+    expectedIsWatched = _buildIsWatch(watchedMark)
+    actualIsWatched = _retrieveMediumFromRepo(context, repoType).get('isWatched')
+
+    assert expectedIsWatched == actualIsWatched, \
+        'The {} should be marked as {}, but it is not'.format(mediumType, watchedMark)
 
 
 def _buildMedium(type, title, isWatched):

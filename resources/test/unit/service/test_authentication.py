@@ -7,16 +7,32 @@ class AuthenticationShould(unittest.TestCase):
     @mock.patch('resources.lib.adapter.betaseries.BearerRepository')
     @mock.patch('resources.lib.adapter.logger.Logger')
     def setUp(self, logger, bearerRepo):
+        self.logger = logger
         self.bearerRepo = bearerRepo
-        self.authentication = Authentication(logger, self.bearerRepo)
+        self.authentication = Authentication(self.logger, self.bearerRepo)
 
     def test_be_authenticated_when_bearer_exists(self):
-        self.bearerRepo.exists = mock.Mock(return_value=True)
+        self.bearerRepo.isActive = mock.Mock(return_value=True)
 
         authenticated = self.authentication.isAuthenticated()
 
-        self.bearerRepo.exists.assert_called_once_with()
         self.assertTrue(authenticated)
+
+    def test_not_be_authenticated_when_bearer_does_not_exist(self):
+        self.bearerRepo.isActive = mock.Mock(return_value=False)
+
+        authenticated = self.authentication.isAuthenticated()
+
+        self.assertFalse(authenticated)
+
+    def test_notify_user_when_bearer_has_not_been_initialized(self):
+        self.bearerRepo.isActive = mock.Mock(return_value=None)
+
+        authenticated = self.authentication.isAuthenticated()
+
+        self.logger.yellError.assert_called_once_with('No BetaSeries authentication', 20002)
+        self.bearerRepo.reset.assert_called_once_with()
+        self.assertFalse(authenticated)
 
     def test_create_device_token_when_authentication_is_initialized(self):
         fakeDevice = {'token': 'random_device_identifier'}

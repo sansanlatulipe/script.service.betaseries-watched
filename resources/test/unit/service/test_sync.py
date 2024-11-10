@@ -25,15 +25,12 @@ class DeamonShould(unittest.TestCase):
         self.assertEqual(2, self.daemon.abortRequested.call_count)
 
     def test_synchronize_every_library_while_running(self):
-        self.library.synchronize = mock.Mock()
-
         self.daemon.run()
 
         self.assertEqual(2, self.library.synchronize.call_count)
 
     def test_check_authentication_is_ready_before_synchronizing(self):
         self.authentication.isAuthenticated = mock.Mock(return_value=False)
-        self.library.synchronize = mock.Mock()
 
         self.daemon.run()
 
@@ -42,7 +39,6 @@ class DeamonShould(unittest.TestCase):
 
     def test_check_can_synchronize_media_kind_before_running_it(self):
         self.settings.canSynchronize = mock.Mock(side_effect=[False, True])
-        self.library.synchronize = mock.Mock()
 
         self.daemon.run()
 
@@ -53,22 +49,19 @@ class DeamonShould(unittest.TestCase):
         self.library.synchronize.assert_called_once()
 
     def test_ignore_all_notifications_but_video_updates(self):
-        self.library.synchronizeUpdatedOnKodi = mock.Mock()
-
         self.daemon.onNotification('me', 'Fake.Event', '{"item": {"type": "movie"}}')
 
         self.library.synchronizeUpdatedOnKodi.assert_not_called()
 
     def test_ignore_all_notifications_not_regarding_a_managed_library(self):
-        self.library.synchronizeUpdatedOnKodi = mock.Mock()
+        self.settings.canSynchronize = mock.Mock(return_value=False)
 
         self.daemon.onNotification('me', 'VideoLibrary.OnUpdate', '{"item": {"type": "music"}}')
 
+        self.settings.canSynchronize.assert_called_once_with('musics')
         self.library.synchronizeUpdatedOnKodi.assert_not_called()
 
     def test_synchronize_kodi_medium_with_betaseries_when_added_to_library(self):
-        self.library.synchronizeAddedOnKodi = mock.Mock()
-
         self.daemon.onNotification('me', 'VideoLibrary.OnUpdate', """{
             "added": true,
             "item": {
@@ -80,8 +73,6 @@ class DeamonShould(unittest.TestCase):
         self.library.synchronizeAddedOnKodi.assert_called_once_with('kodi-1')
 
     def test_synchronize_kodi_medium_with_betaseries_when_updated_to_library(self):
-        self.library.synchronizeUpdatedOnKodi = mock.Mock()
-
         self.daemon.onNotification('me', 'VideoLibrary.OnUpdate', """{
             "added": false,
             "item": {
@@ -129,7 +120,6 @@ class WatchSynchroShould(unittest.TestCase):
     def test_cache_last_betaseries_endpoint_when_scanning_whole_library(self):
         fakeEndpoint = {'endpoint': 'event_1', 'id': 'bs-1'}
         self.bsRepo.retrieveUpdatedIdsFrom = mock.Mock(return_value=[fakeEndpoint])
-        self.cacheRepo.setBetaseriesEndpoint = mock.Mock()
 
         self.sync.synchronizeAll()
 
@@ -138,7 +128,6 @@ class WatchSynchroShould(unittest.TestCase):
 
     def test_reset_cache_endpoints_if_none_exists_when_scanning_whole_library(self):
         self.bsRepo.retrieveUpdatedIdsFrom = mock.Mock(return_value=[])
-        self.cacheRepo.setBetaseriesEndpoint = mock.Mock()
 
         self.sync.synchronizeAll()
 
@@ -174,7 +163,6 @@ class WatchSynchroShould(unittest.TestCase):
     def test_retrieve_betaseries_events_from_cached_endpoint_when_scanning_recent_updates(self):
         fakeEndpoint = {'endpoint': 'event_2', 'id': 'bs-1'}
         self.cacheRepo.getBetaseriesEndpoint = mock.Mock(return_value='event_1')
-        self.cacheRepo.setBetaseriesEndpoint = mock.Mock()
         self.bsRepo.retrieveById = mock.Mock(return_value={'id': 'bs-1'})
         self.bsRepo.retrieveUpdatedIdsFrom = mock.Mock(return_value=[fakeEndpoint])
 
@@ -222,27 +210,18 @@ class WatchSynchroShould(unittest.TestCase):
         syncMock.assert_called_once_with(kodiMedium, bsMedium, source='kodi')
 
     def test_not_synchronize_medium_when_betaseries_one_is_missing(self):
-        self.bsRepo.updateWatchedStatus = mock.Mock()
-        self.kodiRepo.updateWatchedStatus = mock.Mock()
-
         self.sync.synchronizeMedia(self._buildMedium('kodi-1'), None)
 
         self.bsRepo.updateWatchedStatus.assert_not_called()
         self.bsRepo.updateWatchedStatus.assert_not_called()
 
     def test_not_synchronize_medium_when_kodi_one_is_missing(self):
-        self.bsRepo.updateWatchedStatus = mock.Mock()
-        self.kodiRepo.updateWatchedStatus = mock.Mock()
-
         self.sync.synchronizeMedia(None, self._buildMedium('bs-1'))
 
         self.bsRepo.updateWatchedStatus.assert_not_called()
         self.bsRepo.updateWatchedStatus.assert_not_called()
 
     def test_not_synchronize_media_when_watch_status_are_equal(self):
-        self.bsRepo.updateWatchedStatus = mock.Mock()
-        self.kodiRepo.updateWatchedStatus = mock.Mock()
-
         self.sync.synchronizeMedia(
             self._buildMedium('kodi-1', isWatched=True),
             self._buildMedium('bs-1', isWatched=True)
@@ -263,7 +242,7 @@ class WatchSynchroShould(unittest.TestCase):
         self.sync.synchronizeMedia(kodiMedium, bsMedium)
 
         self.kodiRepo.updateWatchedStatus.assert_called_once_with(kodiMedium)
-        assert kodiMedium.get('isWatched') is True
+        self.assertTrue(kodiMedium.get('isWatched'))
 
     def test_update_betaseries_medium_when_kodi_was_watched_on_first_synchronization(self):
         self.bsRepo.updateWatchedStatus = mock.Mock()
@@ -273,7 +252,7 @@ class WatchSynchroShould(unittest.TestCase):
         self.sync.synchronizeMedia(kodiMedium, bsMedium)
 
         self.bsRepo.updateWatchedStatus.assert_called_once_with(bsMedium)
-        assert kodiMedium.get('isWatched') is True
+        self.assertTrue(kodiMedium.get('isWatched'))
 
     def test_update_kodi_medium_when_watch_status_change_on_betaseries(self):
         self.kodiRepo.updateWatchedStatus = mock.Mock()
@@ -283,17 +262,16 @@ class WatchSynchroShould(unittest.TestCase):
         self.sync.synchronizeMedia(kodiMedium, bsMedium, source='betaseries')
 
         self.kodiRepo.updateWatchedStatus.assert_called_once_with(kodiMedium)
-        assert kodiMedium.get('isWatched') is False
+        self.assertFalse(kodiMedium.get('isWatched'))
 
     def test_update_betaseries_medium_when_watch_status_change_on_kodi(self):
-        self.bsRepo.updateWatchedStatus = mock.Mock()
         kodiMedium = self._buildMedium('kodi-1', isWatched=False)
         bsMedium = self._buildMedium('bs-1', isWatched=True)
 
         self.sync.synchronizeMedia(kodiMedium, bsMedium, source='kodi')
 
         self.bsRepo.updateWatchedStatus.assert_called_once_with(bsMedium)
-        assert bsMedium.get('isWatched') is False
+        self.assertFalse(bsMedium.get('isWatched'))
 
     @staticmethod
     def _buildMedium(mediumId, uniqueId=1001, isWatched=False):
