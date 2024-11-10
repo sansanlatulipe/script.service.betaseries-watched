@@ -28,6 +28,7 @@ class Container:
 
     def _initAuthentication(self):
         return authentication.Authentication(
+            self.get('logger'),
             self.get('betaseries.bearer.repository')
         )
 
@@ -49,8 +50,8 @@ class Container:
 
     def _initBetaseriesMovieRepository(self):
         return adapterBetaseries.MovieRepository(
-            self.get('settings').getBetaseriesNotifications(),
-            self.get('betaseries.http')
+            self.get('betaseries.http'),
+            self.get('settings').getBetaseriesNotifications()
         )
 
     def _initCacheRepository(self):

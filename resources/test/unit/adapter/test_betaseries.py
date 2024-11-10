@@ -6,9 +6,9 @@ from resources.lib.adapter import betaseries
 class MovieRepositoryShould(unittest.TestCase):
     @mock.patch('resources.lib.infra.betaseries.Http')
     def setUp(self, http):
-        self.config = {}
         self.http = http
-        self.repo = betaseries.MovieRepository(self.config, self.http)
+        self.config = {}
+        self.repo = betaseries.MovieRepository(self.http, self.config)
 
     def test_build_movie_when_retrieving_with_known_id(self):
         self.http.get = mock.Mock(return_value=self._buildBsMovieObject(1))

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="{{ addon_name }}" name="Synchronization with Betaseries" version="{{ addon_version }}" provider-name="SansanLaTulipe">
+<addon id="{{ addon_name }}" name="Synchronization with BetaSeries" version="{{ addon_version }}" provider-name="SansanLaTulipe">
 	<requires>
 		<import addon="xbmc.python" version="3.0.0" />
 		<import addon="script.module.simplecache" version="1.0.14" />
@@ -9,10 +9,10 @@
 	<extension point="xbmc.service" library="service.py" />
 
 	<extension point="xbmc.addon.metadata">
-		<summary lang="en_GB">Synchronization with Betaseries</summary>
-		<summary lang="fr_FR">Synchronisation avec Betaseries</summary>
-		<description lang="en_GB">This service automatically updates your profile on Betaseries when you have finished watching an episode or a movie on Kodi</description>
-		<description lang="fr_FR">Ce service met à jour automatiquement votre profil sur le site Betaseries lorsque vous venez de finir de regarder un épisode ou nu film dans Kodi</description>
+		<summary lang="en_GB">Synchronization with BetaSeries</summary>
+		<summary lang="fr_FR">Synchronisation avec BetaSeries</summary>
+		<description lang="en_GB">This service automatically updates your profile on BetaSeries when you have finished watching an episode or a movie on Kodi</description>
+		<description lang="fr_FR">Ce service met à jour automatiquement votre profil sur le site BetaSeries lorsque vous venez de finir de regarder un épisode ou nu film dans Kodi</description>
 		<platform>all</platform>
 		<license>GPL-2.0-or-later</license>
 		<source>https://github.com/SansanLaTulipe/{{ addon_name }}</source>

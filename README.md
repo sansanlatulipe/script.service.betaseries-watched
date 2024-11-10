@@ -1,4 +1,4 @@
-# Synchronization with Betaseries
+# Synchronization with BetaSeries
 
 [![GitHub release](https://img.shields.io/github/v/release/sansanlatulipe/script.service.betaseries-watched.svg)](https://github.com/sansanlatulipe/script.service.betaseries-watched/releases)
 [![Integration](https://github.com/sansanlatulipe/script.service.betaseries-watched/workflows/Integration/badge.svg)](https://github.com/sansanlatulipe/script.service.betaseries-watched/actions/workflows/integration.yml)

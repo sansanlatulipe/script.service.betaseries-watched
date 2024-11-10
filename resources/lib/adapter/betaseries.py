@@ -2,9 +2,9 @@ import time
 
 
 class MovieRepository:
-    def __init__(self, config, http):
-        self.config = config
+    def __init__(self, http, config):
         self.http = http
+        self.config = config
 
     def retrieveById(self, movieId):
         response = self.http.get(

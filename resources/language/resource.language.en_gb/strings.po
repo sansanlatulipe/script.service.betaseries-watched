@@ -1,5 +1,5 @@
 # Kodi Media Center language file
-# Addon Name: Synchronization with Betaseries
+# Addon Name: Synchronization with BetaSeries
 # Addon id: script.service.betaseries-watched
 # Addon Provider: SansanLaTulipe
 msgid ""
@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#20000"
 msgid "Dialog connection header"
-msgstr "Betaseries connection"
+msgstr "BetaSeries connection"
 
 msgctxt "#20001"
 msgid "Dialog connection message"
@@ -26,13 +26,17 @@ msgstr ""
 "Please go to {0}\n"
 "and enter the code {1}"
 
+msgctxt "#20002"
+msgid "Dialog no connection yet message"
+msgstr "Please configure your BetaSeries connection to synchronize your libraries"
+
 msgctxt "#21000"
 msgid "Dialog full synchronization start"
 msgstr "Starting full synchronization..."
 
 msgctxt "#21001"
-msgid "Dialog betaseries synchronization start"
-msgstr "Starting Betaseries synchronization..."
+msgid "Dialog BetaSeries synchronization start"
+msgstr "Starting BetaSeries synchronization..."
 
 msgctxt "#21002"
 msgid "Dialog synchronization end"
@@ -43,7 +47,7 @@ msgid "Settings"
 msgstr "General"
 
 msgctxt "#30010"
-msgid "Settings Betaseries connection"
+msgid "Settings BetaSeries connection"
 msgstr "Initialize the connection"
 
 msgctxt "#31000"
@@ -60,7 +64,7 @@ msgstr "Synchronize TV shows"
 
 msgctxt "#32000"
 msgid "Settings notifications"
-msgstr "Betaseries notifications"
+msgstr "BetaSeries notifications"
 
 msgctxt "#32010"
 msgid "Settings notify by e-mail"

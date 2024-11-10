@@ -3,6 +3,7 @@ from tempfile import NamedTemporaryFile
 import qrcode
 import xbmc
 import xbmcgui
+from resources.lib.infra import xbmcmod
 
 
 class JsonRPC:
@@ -68,14 +69,14 @@ class QrcodeDialog(xbmcgui.WindowDialog):
             x=0, y=0,
             width=self.getWidth(), height=25,
             label=self._heading,
-            alignment=xbmcgui.XBFONT_CENTER_X
+            alignment=xbmcmod.XBFONT_CENTER_X
         ))
 
         self.addControl(xbmcgui.ControlLabel(
             x=0, y=50,
             width=self.getWidth(), height=50,
             label=self._message,
-            alignment=xbmcgui.XBFONT_CENTER_X
+            alignment=xbmcmod.XBFONT_CENTER_X
         ))
 
         size = min(self.getWidth(), self.getHeight()) - 200

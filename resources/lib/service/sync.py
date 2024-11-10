@@ -71,7 +71,7 @@ class WatchSynchro:
         self.logger.yellInfo('End of synchronization', 21002)
 
     def synchronizeRecentlyUpdatedOnBetaseries(self):
-        self.logger.yellInfo('Starting Betaseries synchronization', 21001)
+        self.logger.yellInfo('Starting BetaSeries synchronization', 21001)
 
         endpoint = self.cacheRepo.getBetaseriesEndpoint(self.kodiRepo.getKind())
         kodiMedia = self.kodiRepo.retrieveAll()
