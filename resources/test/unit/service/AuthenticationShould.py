@@ -1,11 +1,11 @@
 import unittest
 from unittest import mock
-from resources.lib.service.authentication import Authentication
+from resources.lib.service import Authentication
 
 
 class AuthenticationShould(unittest.TestCase):
     @mock.patch('resources.lib.adapter.betaseries.BearerRepository')
-    @mock.patch('resources.lib.adapter.logger.Logger')
+    @mock.patch('resources.lib.adapter.Logger')
     def setUp(self, logger, bearerRepo):
         self.logger = logger
         self.bearerRepo = bearerRepo

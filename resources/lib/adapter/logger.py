@@ -1,22 +1,28 @@
 import xbmc
+from xbmcaddon import Addon
 import xbmcgui
 
 
 class Logger:
-    def __init__(self, addon, dialogBuilder, dialogProgressBuilder):
+    def __init__(
+        self,
+        addon: Addon,
+        dialogBuilder: xbmcgui.Dialog,
+        dialogProgressBuilder: xbmcgui.DialogProgressBG
+    ):
         self.addon = addon
         self.dialogBuilder = dialogBuilder
         self.dialogProgressBuilder = dialogProgressBuilder
 
         self.dialogProgress = None
 
-    def info(self, msg):
+    def info(self, msg: str) -> None:
         self._log(msg, xbmc.LOGINFO)
 
-    def error(self, msg):
+    def error(self, msg: str) -> None:
         self._log(msg, xbmc.LOGERROR)
 
-    def yellInfo(self, msg, localizedLabel=None):
+    def yellInfo(self, msg: str, localizedLabel: int = None) -> None:
         self.info(msg)
 
         self._closeExistingProgress()
@@ -27,7 +33,7 @@ class Logger:
             sound=False
         )
 
-    def yellProgress(self, percent, msg, localizedLabel=None):
+    def yellProgress(self, percent: int, msg: str, localizedLabel: int = None) -> None:
         self.info(f'{msg} ({percent}%)')
 
         if not self.dialogProgress or percent == 0:
@@ -40,7 +46,7 @@ class Logger:
             message=self._buildLocalizedMessage(localizedLabel, msg)
         )
 
-    def yellError(self, msg, localizedLabel=None):
+    def yellError(self, msg: str, localizedLabel: int = None) -> None:
         self.error(msg)
 
         self._closeExistingProgress()
@@ -51,13 +57,13 @@ class Logger:
             sound=True
         )
 
-    def _buildLocalizedMessage(self, localizedLabel, defaultMsg):
+    def _buildLocalizedMessage(self, localizedLabel: int, defaultMsg: str) -> str:
         return self.addon.getLocalizedString(localizedLabel) if localizedLabel else defaultMsg
 
-    def _closeExistingProgress(self):
+    def _closeExistingProgress(self) -> None:
         if self.dialogProgress:
             self.dialogProgress.close()
             self.dialogProgress = None
 
-    def _log(self, msg, loglvl):
+    def _log(self, msg: str, loglvl: int) -> None:
         xbmc.log('{}: {}'.format(self.addon.getAddonInfo('id'), msg), loglvl)

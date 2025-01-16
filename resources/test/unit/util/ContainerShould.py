@@ -1,6 +1,6 @@
 import unittest
 from unittest import mock
-from resources.lib.util.di import Container
+from resources.lib.util import Container
 
 
 class ContainerShould(unittest.TestCase):
@@ -26,10 +26,13 @@ class ContainerShould(unittest.TestCase):
         self.container._initFakeService.assert_called_once_with()
         self.assertEqual(service1, service2)
 
-    @mock.patch('xbmcaddon.Addon')
-    def test_contain_the_following_services(self, addon):
-        addon().getAddonInfo.return_value = '.'
-
+    @mock.patch('configparser.ConfigParser.__getitem__', return_value={
+        'url': 'http://localhost:8080',
+        'version': '1.0',
+        'client_id': 'client',
+        'client_secret': 'secret'
+    })
+    def test_contain_the_following_services(self, configparser):
         services = [
             'addon',
             'authentication',

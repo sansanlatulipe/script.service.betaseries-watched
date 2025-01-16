@@ -1,5 +1,5 @@
 import sys
-from resources.lib.launcher import Launcher
+from resources.lib import Launcher
 
 
 if __name__ == '__main__':

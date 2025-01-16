@@ -1,9 +1,13 @@
+from resources.lib.adapter import Logger
+from resources.lib.adapter.betaseries import BearerRepository
+
+
 class Authentication:
-    def __init__(self, logger, bearerRepo):
+    def __init__(self, logger: Logger, bearerRepo: BearerRepository):
         self.logger = logger
         self.bearerRepo = bearerRepo
 
-    def isAuthenticated(self):
+    def isAuthenticated(self) -> bool:
         isBearerActive = self.bearerRepo.isActive()
 
         if isBearerActive is None:
@@ -13,11 +17,11 @@ class Authentication:
 
         return isBearerActive
 
-    def initialize(self):
+    def initialize(self) -> dict:
         self.logger.info('Initializing BetaSeries authentication')
         return self.bearerRepo.createDeviceToken()
 
-    def finalize(self, device):
+    def finalize(self, device: dict) -> bool:
         self.logger.info('Waiting for BetaSeries authentication...')
 
         authenticated = self.bearerRepo.createFromDevice(device)

@@ -3,7 +3,6 @@
 
 try:
     from simplecache import SimpleCache
-    from xbmcgui import XBFONT_CENTER_X
 except ImportError:
     class SimpleCache:
         def __init__(self):
@@ -14,6 +13,3 @@ except ImportError:
 
         def set(self, key, value):
             self.cached[key] = value
-
-
-    XBFONT_CENTER_X = 0x2

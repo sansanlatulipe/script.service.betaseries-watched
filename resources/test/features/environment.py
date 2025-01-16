@@ -1,5 +1,5 @@
 from unittest import mock
-from resources.lib.util.di import Container
+from resources.lib.util import Container
 
 
 class MockContainer(Container):
@@ -32,7 +32,7 @@ class MockContainer(Container):
     def _initBetaseriesMovieRepository(self, repo):
         return repo
 
-    @mock.patch('resources.lib.adapter.cache.Repository')
+    @mock.patch('resources.lib.adapter.CacheRepository')
     def _initCacheRepository(self, repo):
         return repo
 
@@ -44,7 +44,7 @@ class MockContainer(Container):
     def _initKodiMovieRepository(self, repo):
         return repo
 
-    @mock.patch('resources.lib.adapter.logger.Logger')
+    @mock.patch('resources.lib.adapter.Logger')
     def _initLogger(self, logger):
         return logger
 

@@ -1,6 +1,6 @@
 import unittest
 from unittest import mock
-from resources.lib.adapter import settings
+from resources.lib.adapter import Settings
 
 
 class SettingsShould(unittest.TestCase):
@@ -8,7 +8,7 @@ class SettingsShould(unittest.TestCase):
     def setUp(self, addon):
         self.addon = addon
         self.configparser = mock.Mock()
-        self.settings = settings.Settings(self.addon, self.configparser)
+        self.settings = Settings(self.addon, self.configparser)
 
     def test_get_addon_id_from_addon_info(self):
         expectedAddonId = 'hyperion-instance'

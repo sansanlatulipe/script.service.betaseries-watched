@@ -1,10 +1,11 @@
 import json
 from behave import given, when, then
+from resources.lib.entity import MediumEntity
 
 
 @given('the {mediumType} "{mediumTitle}" has been added to {repoType}')
 def step_given_a_new_named_medium_in_repo(context, mediumType, mediumTitle, repoType):
-    medium = _buildMedium(mediumType, mediumTitle, False)
+    medium = _buildMedium(mediumTitle, False)
 
     context.inputs = {
         'medium': medium,
@@ -18,13 +19,13 @@ def step_given_a_new_named_medium_in_repo(context, mediumType, mediumTitle, repo
 
 @given('this {mediumType} is marked as "{watchedMark}" on {repoType}')
 def step_given_a_medium_has_watched_mark(context, mediumType, watchedMark, repoType):
-    _retrieveMediumFromRepo(context, repoType)['isWatched'] = _buildIsWatch(watchedMark)
+    _retrieveMediumFromRepo(context, repoType).isWatched = _buildIsWatch(watchedMark)
 
 
 @given('the {mediumType} "{mediumTitle}" is marked as "{watchedMark}" on {repoType}')
 def step_given_a_named_medium_has_watched_mark(context, mediumType, mediumTitle, watchedMark, repoType):
     context.inputs = {
-        'medium': _buildMedium(mediumType, mediumTitle, False)
+        'medium': _buildMedium(mediumTitle, False)
     }
     step_given_a_medium_has_watched_mark(context, mediumType, watchedMark, repoType)
 
@@ -48,7 +49,7 @@ def step_when_kodi_notification_is_triggered(context, mediumType):
         None,
         'VideoLibrary.OnUpdate',
         json.dumps({
-            'item': context.inputs.get('medium'),
+            'item': vars(context.inputs.get('medium')) | {'type': mediumType},
             'added': context.inputs.get('isNew')
         })
     )
@@ -73,20 +74,14 @@ def step_when_run_complementary_scan_sync(context, mediumType):
 @then('this {mediumType} should be marked as "{watchedMark}" on {repoType}')
 def step_then_assert_medium_should_have_watched_mark(context, mediumType, watchedMark, repoType):
     expectedIsWatched = _buildIsWatch(watchedMark)
-    actualIsWatched = _retrieveMediumFromRepo(context, repoType).get('isWatched')
+    actualIsWatched = _retrieveMediumFromRepo(context, repoType).isWatched
 
     assert expectedIsWatched == actualIsWatched, \
         'The {} should be marked as {}, but it is not'.format(mediumType, watchedMark)
 
 
-def _buildMedium(type, title, isWatched):
-    return {
-        'type': type,
-        'id': 1,
-        'uniqueId': 1,
-        'title': title,
-        'isWatched': isWatched
-    }
+def _buildMedium(title, isWatched):
+    return MediumEntity(1, 1, title, isWatched)
 
 
 def _buildIsWatch(watchedMark):
@@ -95,5 +90,5 @@ def _buildIsWatch(watchedMark):
 
 def _retrieveMediumFromRepo(context, repoType):
     if not context.inputs.get(f'{repoType}Medium'):
-        context.inputs[f'{repoType}Medium'] = context.inputs.get('medium').copy()
+        context.inputs[f'{repoType}Medium'] = context.inputs.get('medium').clone()
     return context.inputs.get(f'{repoType}Medium')

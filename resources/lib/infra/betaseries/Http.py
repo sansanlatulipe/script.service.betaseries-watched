@@ -11,12 +11,12 @@ class Http:
         self.bearer = None
         self.http = HTTPSConnection(config['url'])
 
-    def get(self, uri, data=None):
+    def get(self, uri: str, data: dict = None) -> dict:
         if data:
             uri += '?' + urlencode(data)
         return self._call('GET', uri)
 
-    def post(self, uri, data=None):
+    def post(self, uri: str, data: dict = None) -> dict:
         if isinstance(data, dict):
             data = json.dumps(data)
             headers = {'Content-Type': 'application/json'}
@@ -24,12 +24,12 @@ class Http:
             headers = None
         return self._call('POST', uri, data, headers)
 
-    def delete(self, uri, data=None):
+    def delete(self, uri: str, data: dict = None) -> dict:
         if data:
             uri += '?' + urlencode(data)
         return self._call('DELETE', uri)
 
-    def _call(self, method, uri, body=None, headers=None):
+    def _call(self, method: str, uri: str, body: str = None, headers: dict = None) -> dict:
         self.http.request(
             method,
             uri,
@@ -40,7 +40,7 @@ class Http:
             self.http.getresponse().read().decode()
         )
 
-    def _initHeaders(self, headers):
+    def _initHeaders(self, headers: dict) -> dict:
         headers = headers or {}
         headers.update({
             'Accept': 'application/json',
@@ -51,7 +51,7 @@ class Http:
             headers['Authorization'] = 'Bearer ' + self.bearer
         return headers
 
-    def _decodeResponse(self, response):
+    def _decodeResponse(self, response: str) -> dict:
         response = json.loads(response)
         if response.get('errors'):
             raise IOError(response.get('errors'))
