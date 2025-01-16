@@ -1,0 +1,83 @@
+################################################################################
+# Project metadata and dependencies
+################################################################################
+
+[project]
+name = "script.service.betaseries-watched"
+version = "0.0.0"
+readme = "README.md"
+license = { file = "LICENSE.txt" }
+dependencies = [
+    "qrcode",
+]
+
+[project.optional-dependencies]
+dev = [
+    "behave",
+    "behave[toml]",
+    "behave-html-pretty-formatter",
+    "coverage",
+    "kodi-addon-checker",
+    "kodistubs",
+    "pytest",
+    "ruff",
+]
+
+################################################################################
+# Linter
+################################################################################
+
+# Ruff
+
+[tool.ruff]
+line-length = 120
+indent-width = 4
+exclude = [
+    "resources/test",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.ruff.lint]
+select = [
+    "F",   # pyflakes
+    "E",   # pycodestyle
+    "I",   # isort
+    "ANN", # flake8 type annotations
+]
+ignore = [
+    "ANN401", # typing.Any
+]
+
+[tool.ruff.lint.isort]
+lines-after-imports = 2
+force-single-line = true
+
+################################################################################
+# Tests
+################################################################################
+
+# Pytest
+
+[tool.pytest.ini_options]
+testpaths = [
+    "resources/test/unit",
+]
+python_files = "*Should.py"
+
+# Behave
+
+[tool.behave]
+paths = [
+    "resources/test/features",
+]
+show_skipped = false
+
+[tool.behave.formatters]
+html = "behave_html_pretty_formatter:PrettyHTMLFormatter"
+
+[tool.behave.userdata]
+"behave.formatter.html-pretty.collapse" = "all"

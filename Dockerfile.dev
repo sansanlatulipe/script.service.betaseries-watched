@@ -22,8 +22,8 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 COPY requirements-dev.txt .
 RUN python3 -m pip install --upgrade pip \
-    && pip install -r requirements.txt \
-    && pip install -r requirements-dev.txt
+    && pip install -e . \
+    && pip install -e .[dev]
 
 # Configure SSH
 RUN mkdir /var/run/sshd \
