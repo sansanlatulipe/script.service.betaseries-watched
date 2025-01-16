@@ -3,7 +3,7 @@ from resources.lib.util import Container
 
 
 class Launcher:
-    def __init__(self):
+    def __init__(self) -> None:
         self.container = Container()
 
     def authenticate(self) -> None:

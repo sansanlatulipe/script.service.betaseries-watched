@@ -1,10 +1,11 @@
 import time
+
 from resources.lib.adapter import CacheRepository
 from resources.lib.infra.betaseries import Http
 
 
 class BearerRepository:
-    def __init__(self, cacheRepo: CacheRepository, http: Http):
+    def __init__(self, cacheRepo: CacheRepository, http: Http) -> None:
         self.cacheRepo = cacheRepo
         self.http = http
 

@@ -1,6 +1,6 @@
 import xbmc
-from xbmcaddon import Addon
 import xbmcgui
+from xbmcaddon import Addon
 
 
 class Logger:
@@ -9,7 +9,7 @@ class Logger:
         addon: Addon,
         dialogBuilder: xbmcgui.Dialog,
         dialogProgressBuilder: xbmcgui.DialogProgressBG
-    ):
+    ) -> None:
         self.addon = addon
         self.dialogBuilder = dialogBuilder
         self.dialogProgressBuilder = dialogProgressBuilder

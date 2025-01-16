@@ -1,9 +1,10 @@
 from typing import Union
+
 from resources.lib.infra import SimpleCache
 
 
 class CacheRepository:
-    def __init__(self, cache: SimpleCache, addonId: str):
+    def __init__(self, cache: SimpleCache, addonId: str) -> None:
         self.cache = cache
         self.addonId = addonId
 

@@ -5,7 +5,7 @@ class MediumEntity:
         uniqueId: int = None,
         title: str = None,
         isWatched: bool = None
-    ):
+    ) -> None:
         self.id = mediumId
         self.uniqueId = uniqueId
         self.title = title
@@ -20,7 +20,7 @@ class MediumEntity:
             and self.title == other.title \
             and self.isWatched == other.isWatched
 
-    def clone(self):
+    def clone(self) -> 'MediumEntity':
         return type(self)(
             self.id,
             self.uniqueId,

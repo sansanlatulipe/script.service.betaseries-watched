@@ -1,10 +1,11 @@
 from typing import List
+
 from resources.lib.adapter import MediumRepositoryInterface
 from resources.lib.infra.betaseries import Http
 
 
 class MediumRepositoryAbstract(MediumRepositoryInterface):
-    def __init__(self, http: Http):
+    def __init__(self, http: Http) -> None:
         self.http = http
 
     def retrieveUpdatedIdsFrom(self, endpoint: int, limit: int = 100) -> List[dict]:

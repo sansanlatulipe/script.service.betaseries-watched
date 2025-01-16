@@ -1,7 +1,8 @@
 from typing import List
-from resources.lib.adapter import MediumRepositoryInterface
+
 from resources.lib.adapter import CacheRepository
 from resources.lib.adapter import Logger
+from resources.lib.adapter import MediumRepositoryInterface
 from resources.lib.entity import MediumEntity
 
 
@@ -12,7 +13,7 @@ class WatchSynchro:
         cacheRepo: CacheRepository,
         kodiRepo: MediumRepositoryInterface,
         bsRepo: MediumRepositoryInterface
-    ):
+    ) -> None:
         self.logger = logger
         self.cacheRepo = cacheRepo
         self.kodiRepo = kodiRepo

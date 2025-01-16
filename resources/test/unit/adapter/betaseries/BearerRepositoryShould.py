@@ -65,7 +65,7 @@ class BearerRepositoryShould(unittest.TestCase):
         self.assertEqual(expectedToken, actualToken)
 
     @mock.patch('time.sleep', return_value=None)
-    def test_create_bearer_when_device_token_is_validated(self, patched_time_sleep):
+    def test_create_bearer_when_device_token_is_validated(self, patchedTimeSleep):
         device = self._buildDeviceToken()
         expectedBearer = '98765'
         self.http.post = mock.Mock(return_value={'access_token': expectedBearer})
@@ -80,7 +80,7 @@ class BearerRepositoryShould(unittest.TestCase):
         self.assertTrue(authenticated)
 
     @mock.patch('time.sleep', return_value=None)
-    def test_wait_until_the_token_expires_when_device_is_not_validated(self, patched_time_sleep):
+    def test_wait_until_the_token_expires_when_device_is_not_validated(self, patchedTimeSleep):
         device = self._buildDeviceToken()
         self.http.post = mock.Mock(side_effect=IOError())
         self.cache.setBetaseriesBearer = mock.Mock()

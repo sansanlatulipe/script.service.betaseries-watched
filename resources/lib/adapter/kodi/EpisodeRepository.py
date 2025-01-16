@@ -1,11 +1,12 @@
 from typing import List
+
 from resources.lib.adapter import MediumRepositoryInterface
 from resources.lib.entity import MediumEntity
 from resources.lib.infra.kodi import JsonRPC
 
 
 class EpisodeRepository(MediumRepositoryInterface):
-    def __init__(self, jsonrpc: JsonRPC):
+    def __init__(self, jsonrpc: JsonRPC) -> None:
         self.jsonrpc = jsonrpc
 
     @staticmethod

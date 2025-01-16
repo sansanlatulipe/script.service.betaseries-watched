@@ -1,25 +1,27 @@
 from configparser import ConfigParser
+
 from xbmcaddon import Addon
 from xbmcgui import Dialog
 from xbmcgui import DialogProgressBG
-from resources.lib.adapter.kodi import EpisodeRepository as KodiEpisodeRepository
-from resources.lib.adapter.kodi import MovieRepository as KodiMovieRepository
-from resources.lib.adapter.betaseries import BearerRepository as BsBearerRepository
-from resources.lib.adapter.betaseries import EpisodeRepository as BsEpisodeRepository
-from resources.lib.adapter.betaseries import MovieRepository as BsMovieRepository
+
 from resources.lib.adapter import CacheRepository
 from resources.lib.adapter import Logger
 from resources.lib.adapter import Settings
-from resources.lib.infra.kodi import JsonRPC as KodiJsonRPC
-from resources.lib.infra.betaseries import Http as BsHttp
+from resources.lib.adapter.betaseries import BearerRepository as BsBearerRepository
+from resources.lib.adapter.betaseries import EpisodeRepository as BsEpisodeRepository
+from resources.lib.adapter.betaseries import MovieRepository as BsMovieRepository
+from resources.lib.adapter.kodi import EpisodeRepository as KodiEpisodeRepository
+from resources.lib.adapter.kodi import MovieRepository as KodiMovieRepository
 from resources.lib.infra import SimpleCache
+from resources.lib.infra.betaseries import Http as BsHttp
+from resources.lib.infra.kodi import JsonRPC as KodiJsonRPC
 from resources.lib.service import Authentication
 from resources.lib.service import Deamon
 from resources.lib.service import WatchSynchro
 
 
 class Container:
-    def __init__(self):
+    def __init__(self) -> None:
         self.singletons = {}
 
     def get(self, service: str) -> object:

@@ -9,7 +9,7 @@ all: lint test build
 build: clean
 	@mkdir -p .build/$(ADDON_NAME)
 	@cp -r * .build/$(ADDON_NAME)
-	@(cd .build/$(ADDON_NAME) && rm -r behave.ini Dockerfile.dev Makefile pylintrc requirements*.txt resources/test/)
+	@(cd .build/$(ADDON_NAME) && rm -r behave.ini Dockerfile.dev Makefile resources/test/ pyproject.toml)
 	@find .build/$(ADDON_NAME) -type d -exec chmod u=rwx,go=rx {} +
 	@find .build/$(ADDON_NAME) -type f -exec chmod u=rw,go=r {} +
 	@sed -i .build/$(ADDON_NAME)/addon.xml \
@@ -31,9 +31,7 @@ test: unit-test service-test
 	@[ -z "$(HTML_REPORT)" ] || coverage html --fail-under=70 --skip-empty --show-contexts --directory=/var/www/html/coverage
 
 lint:
-	flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-	flake8 . --count --max-complexity=10 --max-line-length=120 --per-file-ignores=__init__.py:F401 --statistics
-	pylint .
+	ruff check
 
 unit-test:
 	@coverage run --context=unit-test --data-file=.coverage.unit-test --branch --source=resources/lib/ --module \
@@ -44,5 +42,5 @@ service-test:
 	    behave $(HTML_REPORT) --format=pretty $(BEHAVE_OPTIONS)
 
 clean:
-	@rm -rf .build/ coverage.xml .coverage* .pytest_cache/
+	@rm -rf .build/ .?coverage* .pytest_cache/ .ruff_cache/
 	@find . -type d -name __pycache__ -exec rm -r {} +

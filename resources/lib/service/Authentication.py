@@ -3,7 +3,7 @@ from resources.lib.adapter.betaseries import BearerRepository
 
 
 class Authentication:
-    def __init__(self, logger: Logger, bearerRepo: BearerRepository):
+    def __init__(self, logger: Logger, bearerRepo: BearerRepository) -> None:
         self.logger = logger
         self.bearerRepo = bearerRepo
 

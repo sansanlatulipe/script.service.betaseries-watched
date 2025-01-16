@@ -1,9 +1,10 @@
 from configparser import ConfigParser
+
 from xbmcaddon import Addon
 
 
 class Settings:
-    def __init__(self, addon: Addon, configparser: ConfigParser):
+    def __init__(self, addon: Addon, configparser: ConfigParser) -> None:
         self.addon = addon
         self.configparser = configparser
         self.configparser.read(self.addon.getAddonInfo('path') + '/resources/data/config.ini')

@@ -4,7 +4,7 @@ from resources.lib.infra.betaseries import Http
 
 
 class MovieRepository(MediumRepositoryAbstract):
-    def __init__(self, http: Http, config: dict):
+    def __init__(self, http: Http, config: dict) -> None:
         super().__init__(http)
         self.config = config
 

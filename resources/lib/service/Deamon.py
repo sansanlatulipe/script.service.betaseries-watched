@@ -1,17 +1,26 @@
+from typing import Dict
+
 from xbmc import Monitor
+
 from resources.lib.adapter import Settings
 from resources.lib.infra.kodi import JsonRPC
 from resources.lib.service import Authentication
+from resources.lib.service import WatchSynchro
 
 
 class Deamon(Monitor):
-    def __init__(self, settings: Settings, authentication: Authentication, libraries):
+    def __init__(
+        self,
+        settings: Settings,
+        authentication: Authentication,
+        libraries: Dict[str, WatchSynchro]
+    ) -> None:
         super().__init__()
         self.settings = settings
         self.authentication = authentication
         self.libraries = libraries
 
-    def run(self):
+    def run(self) -> None:
         while not self.abortRequested():
             for kind in self.libraries.keys():
                 if self._isSynchronizationReady(kind):

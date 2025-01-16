@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 
 
 class Http:
-    def __init__(self, config):
+    def __init__(self, config: dict) -> None:
         self.version = config['version']
         self.clientId = config['client_id']
         self.clientSecret = config['client_secret']
