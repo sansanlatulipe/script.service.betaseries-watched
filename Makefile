@@ -28,6 +28,7 @@ test: unit-test service-test
 	@coverage combine
 	@coverage report --fail-under=70 --skip-empty
 	@coverage xml --skip-empty -o coverage.xml
+	@coverage lcov -o coverage.info
 	@[ -z "$(HTML_REPORT)" ] || coverage html --fail-under=70 --skip-empty --show-contexts --directory=/var/www/html/coverage
 
 lint:

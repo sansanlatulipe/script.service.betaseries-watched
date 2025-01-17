@@ -2,7 +2,7 @@
 
 [![GitHub release](https://img.shields.io/github/v/release/sansanlatulipe/script.service.betaseries-watched.svg)](https://github.com/sansanlatulipe/script.service.betaseries-watched/releases)
 [![Integration](https://github.com/sansanlatulipe/script.service.betaseries-watched/workflows/Integration/badge.svg)](https://github.com/sansanlatulipe/script.service.betaseries-watched/actions/workflows/integration.yml)
-[![cov](https://sansanlatulipe.github.io/script.service.betaseries-watched/badges/coverage.svg)](https://github.com/sansanlatulipe/script.service.betaseries-watched/actions)
+[![Codecov status](https://img.shields.io/codecov/c/github/sansanlatulipe/script.service.betaseries-watched/main)](https://codecov.io/gh/sansanlatulipe/script.service.betaseries-watched/branch/main)
 
 This project is a service addon for Kodi media center.
 It automatically updates your profile on BetaSeries when you watched an episode or a movie on Kodi.
