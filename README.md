@@ -24,18 +24,18 @@ It automatically updates your profile on BetaSeries when you watched an episode 
 You need a BetaSeries account.
 
 1. Authenicate
-    a. Click the "Initialize the connection" action from the addon settings
+    1. Click the "Initialize the connection" action from the addon settings
         This will open a pop-in displaying an authentication code
-    b. Go to https://www.betaseries.com/device and follow the authentication steps
-    c. Close the pop-in
+    2. Go to https://www.betaseries.com/device and follow the authentication steps
+    3. Close the pop-in
 2. Synchronize
-    a. Choose the libraries you want to synchronize (movies and/or TV shows)
+    1. Choose the libraries you want to synchronize (movies and/or TV shows)
         By default, none is selected
-    b. Choose if you want BetaSeries to notify your social networks when you watched a media
-    c. Save the changes to initialize the synchronization
+    2. Choose if you want BetaSeries to notify your social networks when you watched a media
+    3. Save the changes to initialize the synchronization
         - The media marked as watched on BetaSeries are synchronized with your Kodi libraries (if they exist)
         - The media marked as watched on Kodi are synchronized with BetaSeries
-    d. From now
+    5. From now
         - Every hour, Kodi will check the status of your media in BetaSeries and update your libraries if necessary
         - When the status a media from your libraries changes, Kodi will update it on BetaSeries
 
