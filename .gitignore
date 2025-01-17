@@ -4,6 +4,6 @@
 /.ruff_cache
 /.vscode
 /*.egg-info
-/coverage.info
+/coverage.xml
 __pycache__
 *.pyc
