@@ -24,12 +24,12 @@ It automatically updates your profile on BetaSeries when you watched an episode 
 You need a BetaSeries account.
 
 1. Authenicate
-    1. Click the "Initialize the connection" action from the addon settings
+    1. Click the "Initialize the connection" action from the addon settings  
         This will open a pop-in displaying an authentication code
-    2. Go to https://www.betaseries.com/device and follow the authentication steps
-    3. Close the pop-in
+    3. Go to https://www.betaseries.com/device and follow the authentication steps
+    4. Close the pop-in
 2. Synchronize
-    1. Choose the libraries you want to synchronize (movies and/or TV shows)
+    1. Choose the libraries you want to synchronize (movies and/or TV shows)  
         By default, none is selected
     2. Choose if you want BetaSeries to notify your social networks when you watched a media
     3. Save the changes to initialize the synchronization
