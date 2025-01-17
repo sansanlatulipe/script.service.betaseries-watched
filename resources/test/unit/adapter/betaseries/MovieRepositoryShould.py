@@ -1,17 +1,19 @@
 import unittest
 from unittest import mock
+
 from resources.lib.adapter.betaseries import MovieRepository
 from resources.lib.entity import MediumEntity
+from resources.lib.infra.betaseries import Http
 
 
 class MovieRepositoryShould(unittest.TestCase):
     @mock.patch('resources.lib.infra.betaseries.Http')
-    def setUp(self, http):
+    def setUp(self, http: Http) -> None:
         self.http = http
         self.config = {}
         self.repo = MovieRepository(self.http, self.config)
 
-    def test_build_movie_when_retrieving_with_known_id(self):
+    def test_build_movie_when_retrieving_with_known_id(self) -> None:
         self.http.get = mock.Mock(return_value=self._buildBsMovieObject(1))
 
         movie = self.repo.retrieveById(5)
@@ -22,7 +24,7 @@ class MovieRepositoryShould(unittest.TestCase):
             movie
         )
 
-    def test_return_none_when_retrieving_with_unknown_id(self):
+    def test_return_none_when_retrieving_with_unknown_id(self) -> None:
         self.http.get = mock.Mock(return_value={})
 
         movie = self.repo.retrieveById('unknown_id')
@@ -30,7 +32,7 @@ class MovieRepositoryShould(unittest.TestCase):
         self.http.get.assert_called_once_with('/movies/movie', {'id': 'unknown_id'})
         self.assertIsNone(movie)
 
-    def test_build_movie_when_retrieving_with_known_tmdb_id(self):
+    def test_build_movie_when_retrieving_with_known_tmdb_id(self) -> None:
         self.http.get = mock.Mock(return_value=self._buildBsMovieObject(0))
 
         movie = self.repo.retrieveByUniqueId(1005)
@@ -41,7 +43,7 @@ class MovieRepositoryShould(unittest.TestCase):
             movie
         )
 
-    def test_change_movie_status_to_0_when_updating_to_unwatched(self):
+    def test_change_movie_status_to_0_when_updating_to_unwatched(self) -> None:
         self.config['mail'] = lambda: False
         self.config['twitter'] = lambda: False
         self.config['profile'] = lambda: False
@@ -58,7 +60,7 @@ class MovieRepositoryShould(unittest.TestCase):
             'profile': 0
         })
 
-    def test_change_movie_status_to_1_when_updating_to_watched(self):
+    def test_change_movie_status_to_1_when_updating_to_watched(self) -> None:
         self.config['mail'] = lambda: True
         self.config['twitter'] = lambda: True
         self.config['profile'] = lambda: True
@@ -76,7 +78,7 @@ class MovieRepositoryShould(unittest.TestCase):
         })
 
     @staticmethod
-    def _buildBsMovieObject(status):
+    def _buildBsMovieObject(status: int) -> dict:
         return {
             'movie': {
                 'id': 5,
@@ -89,5 +91,5 @@ class MovieRepositoryShould(unittest.TestCase):
         }
 
     @staticmethod
-    def _buildMovieEntity(isWatched):
+    def _buildMovieEntity(isWatched: bool) -> MediumEntity:
         return MediumEntity(5, 1005, 'Fake movie', isWatched)

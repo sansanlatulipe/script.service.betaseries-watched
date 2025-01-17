@@ -4,11 +4,13 @@ ADDON_ASSET := $(ADDON_NAME)_$(ADDON_VERSION).zip
 
 KODI_VERSION := matrix
 
-all: lint test build
+all: clean lint test build
 
 build: clean
+	@echo "Create working directory"
 	@mkdir -p .build/$(ADDON_NAME)
 	@cp -r * .build/$(ADDON_NAME)
+	@echo "Prepare addon asset contents"
 	@(cd .build/$(ADDON_NAME) && rm -r behave.ini Dockerfile.dev Makefile resources/test/ pyproject.toml)
 	@find .build/$(ADDON_NAME) -type d -exec chmod u=rwx,go=rx {} +
 	@find .build/$(ADDON_NAME) -type f -exec chmod u=rw,go=r {} +
@@ -17,8 +19,10 @@ build: clean
 	    -e "s/{{ addon_version }}/$(ADDON_VERSION)/" \
 	    -e "/{{ addon_changelog }}/r changelog.txt" \
 	    -e "s/^.*{{ addon_changelog }}/$(ADDON_VERSION) (`date +'%Y-%m-%d'`)/"
+	@echo "Build addon asset"
 	@(cd .build/$(ADDON_NAME) && kodi-addon-checker --branch $(KODI_VERSION))
 	@(cd .build && zip -r $(ADDON_ASSET) $(ADDON_NAME))
+	@echo "Cleanup working directory"
 	@rm -r .build/$(ADDON_NAME)
 
 test-html: HTML_REPORT = --format=html --outfile=/var/www/html/behave-report.html
@@ -31,7 +35,7 @@ test: unit-test service-test
 	@[ -z "$(HTML_REPORT)" ] || coverage html --fail-under=70 --skip-empty --show-contexts --directory=/var/www/html/coverage
 
 lint:
-	ruff check
+	@ruff check
 
 unit-test:
 	@coverage run --context=unit-test --data-file=.coverage.unit-test --branch --source=resources/lib/ --module \
@@ -42,5 +46,5 @@ service-test:
 	    behave $(HTML_REPORT) --format=pretty $(BEHAVE_OPTIONS)
 
 clean:
-	@rm -rf .build/ .?coverage* .pytest_cache/ .ruff_cache/
+	@rm -rf .build/ .?coverage* *.egg-info .pytest_cache/ .ruff_cache/
 	@find . -type d -name __pycache__ -exec rm -r {} +

@@ -1,16 +1,18 @@
 import unittest
 from unittest import mock
+
 from resources.lib.adapter.kodi import MovieRepository
 from resources.lib.entity import MediumEntity
+from resources.lib.infra.kodi import JsonRPC
 
 
 class MovieRepositoryShould(unittest.TestCase):
     @mock.patch('resources.lib.infra.kodi.JsonRPC')
-    def setUp(self, jsonrpc):
+    def setUp(self, jsonrpc: JsonRPC) -> None:
         self.jsonrpc = jsonrpc
         self.repo = MovieRepository(self.jsonrpc)
 
-    def test_build_movie_when_retrieving_with_known_id(self):
+    def test_build_movie_when_retrieving_with_known_id(self) -> None:
         fakeResponse = {'result': {'moviedetails': self._buildMovieObject(1)}}
         self.jsonrpc.call = mock.Mock(return_value=fakeResponse)
 
@@ -26,7 +28,7 @@ class MovieRepositoryShould(unittest.TestCase):
             movie
         )
 
-    def test_return_none_when_retrieving_with_unknown_id(self):
+    def test_return_none_when_retrieving_with_unknown_id(self) -> None:
         self.jsonrpc.call = mock.Mock(return_value={})
 
         movie = self.repo.retrieveById('unknown_id')
@@ -38,7 +40,7 @@ class MovieRepositoryShould(unittest.TestCase):
         )
         self.assertIsNone(movie)
 
-    def test_build_movies_when_retrieving_all(self):
+    def test_build_movies_when_retrieving_all(self) -> None:
         fakeResponse = {'result': {'movies': [
             self._buildMovieObject(1),
             self._buildMovieObject(0)
@@ -57,7 +59,7 @@ class MovieRepositoryShould(unittest.TestCase):
             movies
         )
 
-    def test_change_movie_playcount_to_0_when_updating_to_unwatched(self):
+    def test_change_movie_playcount_to_0_when_updating_to_unwatched(self) -> None:
         movie = self._buildMovieEntity(False)
         self.repo.updateWatchedStatus(movie)
 
@@ -66,7 +68,7 @@ class MovieRepositoryShould(unittest.TestCase):
             'playcount': 0
         })
 
-    def test_change_movie_playcount_to_1_when_updating_to_watched(self):
+    def test_change_movie_playcount_to_1_when_updating_to_watched(self) -> None:
         movie = self._buildMovieEntity(True)
         self.repo.updateWatchedStatus(movie)
 
@@ -76,7 +78,7 @@ class MovieRepositoryShould(unittest.TestCase):
         })
 
     @staticmethod
-    def _buildMovieObject(playcount):
+    def _buildMovieObject(playcount: int) -> dict:
         return {
             'movieid': 5,
             'uniqueid': {
@@ -87,5 +89,5 @@ class MovieRepositoryShould(unittest.TestCase):
         }
 
     @staticmethod
-    def _buildMovieEntity(isWatched):
+    def _buildMovieEntity(isWatched: bool) -> MediumEntity:
         return MediumEntity(5, 1005, 'Movie title', isWatched)

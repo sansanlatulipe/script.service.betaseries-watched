@@ -1,13 +1,15 @@
 import unittest
+from typing import Callable
 from unittest import mock
+
 from resources.lib.util import Container
 
 
 class ContainerShould(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.container = Container()
 
-    def test_initialize_service(self):
+    def test_initialize_service(self) -> None:
         fakeService = object()
         self.container._initFakeService = mock.Mock(return_value=fakeService)
 
@@ -16,7 +18,7 @@ class ContainerShould(unittest.TestCase):
         self.container._initFakeService.assert_called_once_with()
         self.assertEqual(fakeService, service)
 
-    def test_return_same_service_on_successive_calls(self):
+    def test_return_same_service_on_successive_calls(self) -> None:
         fakeService = object()
         self.container._initFakeService = mock.Mock(return_value=fakeService)
 
@@ -32,7 +34,7 @@ class ContainerShould(unittest.TestCase):
         'client_id': 'client',
         'client_secret': 'secret'
     })
-    def test_contain_the_following_services(self, configparser):
+    def test_contain_the_following_services(self, configparser: Callable) -> None:
         services = [
             'addon',
             'authentication',

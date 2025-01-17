@@ -1,13 +1,17 @@
 import unittest
 from unittest import mock
+
+from resources.lib.adapter import Settings
+from resources.lib.service import Authentication
 from resources.lib.service import Deamon
+from resources.lib.service import WatchSynchro
 
 
 class DeamonShould(unittest.TestCase):
     @mock.patch('resources.lib.service.WatchSynchro')
     @mock.patch('resources.lib.service.Authentication')
     @mock.patch('resources.lib.adapter.Settings')
-    def setUp(self, settings, authentication, library):
+    def setUp(self, settings: Settings, authentication: Authentication, library: WatchSynchro) -> None:
         self.settings = settings()
         self.authentication = authentication()
         self.library = library()
@@ -16,7 +20,7 @@ class DeamonShould(unittest.TestCase):
 
         self.daemon.abortRequested = mock.Mock(side_effect=[False, True])
 
-    def test_run_while_no_abort_is_requested(self):
+    def test_run_while_no_abort_is_requested(self) -> None:
         self.daemon.waitForAbort = mock.Mock()
 
         self.daemon.run()
@@ -24,12 +28,12 @@ class DeamonShould(unittest.TestCase):
         self.daemon.waitForAbort.assert_called_once_with(3600)
         self.assertEqual(2, self.daemon.abortRequested.call_count)
 
-    def test_synchronize_every_library_while_running(self):
+    def test_synchronize_every_library_while_running(self) -> None:
         self.daemon.run()
 
         self.assertEqual(2, self.library.synchronize.call_count)
 
-    def test_check_authentication_is_ready_before_synchronizing(self):
+    def test_check_authentication_is_ready_before_synchronizing(self) -> None:
         self.authentication.isAuthenticated = mock.Mock(return_value=False)
 
         self.daemon.run()
@@ -37,7 +41,7 @@ class DeamonShould(unittest.TestCase):
         self.assertEqual(2, self.authentication.isAuthenticated.call_count)
         self.library.synchronize.assert_not_called()
 
-    def test_check_can_synchronize_media_kind_before_running_it(self):
+    def test_check_can_synchronize_media_kind_before_running_it(self) -> None:
         self.settings.canSynchronize = mock.Mock(side_effect=[False, True])
 
         self.daemon.run()
@@ -48,12 +52,12 @@ class DeamonShould(unittest.TestCase):
         ])
         self.library.synchronize.assert_called_once()
 
-    def test_ignore_all_notifications_but_video_updates(self):
+    def test_ignore_all_notifications_but_video_updates(self) -> None:
         self.daemon.onNotification('me', 'Fake.Event', '{"item": {"type": "movie"}}')
 
         self.library.synchronizeUpdatedOnKodi.assert_not_called()
 
-    def test_ignore_all_notifications_not_regarding_a_managed_library(self):
+    def test_ignore_all_notifications_not_regarding_a_managed_library(self) -> None:
         self.settings.canSynchronize = mock.Mock(return_value=False)
 
         self.daemon.onNotification('me', 'VideoLibrary.OnUpdate', '{"item": {"type": "music"}}')
@@ -61,7 +65,7 @@ class DeamonShould(unittest.TestCase):
         self.settings.canSynchronize.assert_called_once_with('musics')
         self.library.synchronizeUpdatedOnKodi.assert_not_called()
 
-    def test_synchronize_kodi_medium_with_betaseries_when_added_to_library(self):
+    def test_synchronize_kodi_medium_with_betaseries_when_added_to_library(self) -> None:
         self.daemon.onNotification('me', 'VideoLibrary.OnUpdate', """{
             "added": true,
             "item": {
@@ -72,7 +76,7 @@ class DeamonShould(unittest.TestCase):
 
         self.library.synchronizeAddedOnKodi.assert_called_once_with('kodi-1')
 
-    def test_synchronize_kodi_medium_with_betaseries_when_updated_to_library(self):
+    def test_synchronize_kodi_medium_with_betaseries_when_updated_to_library(self) -> None:
         self.daemon.onNotification('me', 'VideoLibrary.OnUpdate', """{
             "added": false,
             "item": {
