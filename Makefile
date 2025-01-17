@@ -39,11 +39,11 @@ lint:
 
 unit-test:
 	@coverage run --context=unit-test --data-file=.coverage.unit-test --branch --source=resources/lib/ --module \
-	    pytest
+	    pytest $(TEST_OPTIONS)
 
 service-test:
 	coverage run --context=service-test --data-file=.coverage.service-test --branch --source=resources/lib/ --module \
-	    behave $(HTML_REPORT) --format=pretty $(BEHAVE_OPTIONS)
+	    behave $(HTML_REPORT) --format=pretty $(TEST_OPTIONS)
 
 clean:
 	@rm -rf .build/ .?coverage* *.egg-info .pytest_cache/ .ruff_cache/
