@@ -34,7 +34,6 @@ class QrcodeDialog(WindowDialog):
         self.close()
 
     def _buildQrcode(self) -> None:
-        # pylint: disable=consider-using-with
         self._qrcodeFile = NamedTemporaryFile(suffix='.png')
         qrcodeImage = qrcode.make(self._url)
         qrcodeImage.save(self._qrcodeFile.name)
