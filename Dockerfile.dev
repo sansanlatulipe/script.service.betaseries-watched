@@ -19,8 +19,7 @@ RUN apt-get update && apt-get install -y \
     openssh-server
 
 # Install Python dependencies
-COPY requirements.txt .
-COPY requirements-dev.txt .
+COPY pyproject.toml .
 RUN python3 -m pip install --upgrade pip \
     && pip install -e . \
     && pip install -e .[dev]
