@@ -39,7 +39,7 @@ class QrcodeDialog(WindowDialog):
         qrcodeImage.save(self._qrcodeFile.name)
 
     def _buildControls(self) -> None:
-        self.addControls(ControlLabel(
+        self.addControl(ControlLabel(
             x=0, y=0,
             width=self.getWidth(), height=25,
             label=self._heading,
