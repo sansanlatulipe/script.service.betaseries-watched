@@ -18,7 +18,7 @@ build: clean
 	@sed -i .build/$(ADDON_NAME)/addon.xml \
 	    -e "s/{{ addon_name }}/$(ADDON_NAME)/" \
 	    -e "s/{{ addon_version }}/$(ADDON_VERSION)/" \
-	    -e "/{{ addon_changelog }}/r .build/changelog.txt" \
+	    -e "/{{ addon_changelog }}/r changelog.txt" \
 	    -e "/{{ addon_changelog }}/d"
 	@echo "Build addon asset"
 	@(cd .build/$(ADDON_NAME) && kodi-addon-checker --branch $(KODI_VERSION))
@@ -47,5 +47,5 @@ service-test:
 	    behave $(HTML_REPORT) --format=pretty $(TEST_OPTIONS)
 
 clean:
-	@rm -rf .build/ .?coverage* *.egg-info .pytest_cache/ .ruff_cache/
+	@rm -rf .build/ coverage* .coverage* *.egg-info .pytest_cache/ .ruff_cache/
 	@find . -type d -name __pycache__ -exec rm -r {} +

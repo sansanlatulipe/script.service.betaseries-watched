@@ -3,7 +3,6 @@ from typing import Callable
 from unittest import mock
 
 from xbmcgui import ControlImage
-from xbmcgui import ControlLabel
 
 from resources.lib.infra.kodi import QrcodeDialog
 
@@ -16,28 +15,35 @@ class QrcodeDialogShould(unittest.TestCase):
 
         self.dialog = QrcodeDialog(self.heading, self.message, self.url)
 
+    @mock.patch('tempfile._TemporaryFileWrapper')
     @mock.patch('qrcode.make')
-    def test_make_qrcode_file_when_showing_dialog(self, qrCodeMaker: Callable) -> None:
+    def test_make_qrcode_file_when_showing_dialog(self, qrCodeMaker: Callable, namedFile: Callable) -> None:
         qrCodeImage = mock.Mock()
         qrCodeMaker.return_value = qrCodeImage
+        namedFile.return_value.name = 'tempfile'
+        self.dialog._window.getControl = mock.Mock()
 
         self.dialog.show()
 
-        qrCodeMaker.assert_called_once_with(self.url)
+        qrCodeMaker.assert_called_once_with(self.url, border=1)
+        qrCodeImage.save.assert_called_once_with('tempfile')
 
-    def test_add_controls_when_showing_dialog(self) -> None:
-        self.dialog.addControl = mock.Mock()
+    def test_build_controls_when_showing_dialog(self) -> None:
+        self.dialog._window.getControl = mock.Mock()
+        self.dialog._window.addControl = mock.Mock()
 
         self.dialog.show()
 
-        self.assertEqual(3, self.dialog.addControl.call_count)
-        self.assertIsInstance(self.dialog.addControl.call_args_list[0].args[0], ControlLabel)
-        self.assertIsInstance(self.dialog.addControl.call_args_list[1].args[0], ControlLabel)
-        self.assertIsInstance(self.dialog.addControl.call_args_list[2].args[0], ControlImage)
+        self.dialog._window.getControl().setLabel.assert_called_once_with(self.heading)
+        self.dialog._window.getControl().setText.assert_called_once_with(self.message)
+        self.assertIsInstance(self.dialog._window.addControl.call_args[0][0], ControlImage)
 
-    def test_delete_temporary_file_when_closing_dialog(self) -> None:
-        self.dialog._qrcodeFile = mock.Mock()
+    @mock.patch('tempfile._TemporaryFileWrapper')
+    def test_delete_temporary_file_after_showing_dialog(self, namedFile: Callable) -> None:
+        tmpFile = mock.Mock()
+        namedFile.return_value = tmpFile
+        self.dialog._window.getControl = mock.Mock()
 
-        self.dialog.close()
+        self.dialog.show()
 
-        self.dialog._qrcodeFile.close.assert_called_once()
+        tmpFile.close.assert_called_once()

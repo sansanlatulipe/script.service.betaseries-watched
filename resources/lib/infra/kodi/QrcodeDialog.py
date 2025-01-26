@@ -1,61 +1,47 @@
 from tempfile import NamedTemporaryFile
 
 import qrcode
-from xbmcgui import Action
+import xbmc
 from xbmcgui import ControlImage
-from xbmcgui import ControlLabel
-from xbmcgui import WindowDialog
+from xbmcgui import WindowXMLDialog
 
 
-try:
-    from xbmcgui import XBFONT_CENTER_X
-except ImportError:
-    XBFONT_CENTER_X = 0x2
-
-
-class QrcodeDialog(WindowDialog):
+class QrcodeDialog:
     def __init__(self, heading: str, message: str, url: str) -> None:
-        super().__init__()
         self._heading = heading
         self._message = message
         self._url = url
+
+        self._window = WindowXMLDialog('DialogTextViewer.xml', xbmc.getSkinDir())
         self._qrcodeFile = None
 
+    def __del__(self) -> None:
+        del self._qrcodeFile
+        del self._window
+
     def show(self) -> None:
+        self._window.show()
+
         self._buildQrcode()
         self._buildControls()
-        super().show()
 
-    def close(self) -> None:
-        super().close()
         self._qrcodeFile.close()
-
-    def onAction(self, action: Action) -> None:
-        self.close()
 
     def _buildQrcode(self) -> None:
         self._qrcodeFile = NamedTemporaryFile(suffix='.png')
-        qrcodeImage = qrcode.make(self._url)
+        qrcodeImage = qrcode.make(self._url, border=1)
         qrcodeImage.save(self._qrcodeFile.name)
 
     def _buildControls(self) -> None:
-        self.addControl(ControlLabel(
-            x=0, y=0,
-            width=self.getWidth(), height=25,
-            label=self._heading,
-            alignment=XBFONT_CENTER_X
-        ))
+        self._window.getControl(1).setLabel(self._heading)
 
-        self.addControl(ControlLabel(
-            x=0, y=50,
-            width=self.getWidth(), height=50,
-            label=self._message,
-            alignment=XBFONT_CENTER_X
-        ))
+        self._window.getControl(5).setText(self._message)
 
-        size = min(self.getWidth(), self.getHeight()) - 200
-        self.addControl(ControlImage(
-            x=(self.getWidth() - size) / 2, y=150,
-            width=size, height=size,
+        windowWidth = self._window.getWidth()
+        windowHeight = self._window.getHeight()
+        qrcodeSize = int(min(windowWidth, windowHeight) * 0.5)
+        self._window.addControl(ControlImage(
+            x=int((windowWidth - qrcodeSize) / 2), y=int(windowHeight / 3),
+            width=qrcodeSize, height=qrcodeSize,
             filename=self._qrcodeFile.name
         ))

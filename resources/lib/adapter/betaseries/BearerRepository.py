@@ -1,4 +1,4 @@
-import time
+import xbmc
 
 from resources.lib.adapter import CacheRepository
 from resources.lib.infra.betaseries import Http
@@ -28,7 +28,7 @@ class BearerRepository:
     def createFromDevice(self, device: dict) -> bool:
         maxRetries = device.get('expires_in') // device.get('interval') - 1
         for _ in range(maxRetries):
-            time.sleep(device.get('interval'))
+            xbmc.sleep(device.get('interval') * 1000)
             response = self._initializeFromDevice(device)
             if self._validate(response):
                 return True
