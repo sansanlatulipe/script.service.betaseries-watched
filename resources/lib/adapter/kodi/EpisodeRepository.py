@@ -17,7 +17,7 @@ class EpisodeRepository(MediumRepositoryInterface):
         response = self.jsonrpc.call(
             'VideoLibrary.GetEpisodeDetails',
             {'episodeid': mediumId},
-            ['uniqueid', 'sorttitle', 'playcount']
+            ['uniqueid', 'showtitle', 'playcount']
         )
         return self._buildEntity(response.get('result', {}).get('episodedetails'))
 
@@ -25,7 +25,7 @@ class EpisodeRepository(MediumRepositoryInterface):
         response = self.jsonrpc.call(
             'VideoLibrary.GetEpisodes',
             {},
-            ['uniqueid', 'sorttitle', 'playcount']
+            ['uniqueid', 'showtitle', 'playcount']
         )
         return list(map(
             self._buildEntity,
@@ -47,6 +47,6 @@ class EpisodeRepository(MediumRepositoryInterface):
         return MediumEntity(
             medium.get('episodeid'),
             medium.get('uniqueid').get('tvdb'),
-            medium.get('sorttitle'),
+            medium.get('showtitle'),
             medium.get('playcount') > 0
         )

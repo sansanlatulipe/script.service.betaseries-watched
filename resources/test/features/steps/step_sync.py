@@ -215,7 +215,7 @@ def _buildKodiEpisodeFromEntity(medium: MediumEntity, isList: bool) -> dict:
         'uniqueid': {
             'tvdb': medium.uniqueId
         },
-        'sorttitle': medium.title,
+        'showtitle': medium.title,
         'playcount': 1 if medium.isWatched else 0
     }
 

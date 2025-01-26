@@ -21,7 +21,7 @@ class EpisodeRepositoryShould(unittest.TestCase):
         self.jsonrpc.call.assert_called_once_with(
             'VideoLibrary.GetEpisodeDetails',
             {'episodeid': 5},
-            ['uniqueid', 'sorttitle', 'playcount']
+            ['uniqueid', 'showtitle', 'playcount']
         )
         self.assertEqual(
             self._buildEpisodeEntity(True),
@@ -36,7 +36,7 @@ class EpisodeRepositoryShould(unittest.TestCase):
         self.jsonrpc.call.assert_called_once_with(
             'VideoLibrary.GetEpisodeDetails',
             {'episodeid': 'unknown_id'},
-            ['uniqueid', 'sorttitle', 'playcount']
+            ['uniqueid', 'showtitle', 'playcount']
         )
         self.assertIsNone(episode)
 
@@ -52,7 +52,7 @@ class EpisodeRepositoryShould(unittest.TestCase):
         self.jsonrpc.call.assert_called_once_with(
             'VideoLibrary.GetEpisodes',
             {},
-            ['uniqueid', 'sorttitle', 'playcount']
+            ['uniqueid', 'showtitle', 'playcount']
         )
         self.assertEqual(
             [self._buildEpisodeEntity(True), self._buildEpisodeEntity(False)],
@@ -84,7 +84,7 @@ class EpisodeRepositoryShould(unittest.TestCase):
             'uniqueid': {
                 'tvdb': 1005
             },
-            'sorttitle': 'Episode title S01E01',
+            'showtitle': 'Episode title S01E01',
             'playcount': playcount
         }
 
