@@ -14,7 +14,7 @@ build: clean
 	@(cd .build/$(ADDON_NAME) && rm -r behave.ini Dockerfile.dev Makefile resources/test/ pyproject.toml)
 	@find .build/$(ADDON_NAME) -type d -exec chmod u=rwx,go=rx {} +
 	@find .build/$(ADDON_NAME) -type f -exec chmod u=rw,go=r {} +
-	@sed -ze "s/.*v$(ADDON_VERSION)[^\n]*\n\(\(- [^\n]\+\n\)\+\).*/\1/" changelog.txt > .build/changelog.txt
+	@awk '/^- /{print $0} !/^- /{if (NR>1) exit}' changelog.txt > .build/changelog.txt
 	@sed -i .build/$(ADDON_NAME)/addon.xml \
 	    -e "s/{{ addon_name }}/$(ADDON_NAME)/" \
 	    -e "s/{{ addon_version }}/$(ADDON_VERSION)/" \
