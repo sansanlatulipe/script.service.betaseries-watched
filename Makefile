@@ -20,7 +20,6 @@ build: clean
 	    -e "s/{{ addon_version }}/$(ADDON_VERSION)/" \
 	    -e "/{{ addon_changelog }}/r /tmp/changelog.txt" \
 	    -e "/{{ addon_changelog }}/d"
-	@rm /tmp/changelog.txt
 	@echo "Build addon asset"
 	@(cd .build/$(ADDON_NAME) && kodi-addon-checker --branch $(KODI_VERSION))
 	@(cd .build && zip -r $(ADDON_ASSET) $(ADDON_NAME))
