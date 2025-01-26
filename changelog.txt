@@ -1,1 +1,19 @@
-- Add service to synchronize episodes watch status
+v1.0.1 (2024-05-30)
+- Complementary synchronization
+- Ignore Kodi events with do not update video libraries
+
+v1.0.0 (2022-04-19)
+- Handle TV show synchronization
+- Log activity in kodi.log
+- Notify synchronization progress
+
+v0.1.0 (2022-04-18)
+- Secure BetaSeries authentication
+- Improve settings management
+
+v0.0.2 (2022-04-11)
+- Handle complementary movie synchronization every hour
+- Add compatibility with Kodi 19.4 (python 3)
+
+v0.0.1 (2020-11-04)
+- Handle first movie synchronization
