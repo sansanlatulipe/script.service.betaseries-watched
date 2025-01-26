@@ -12,7 +12,7 @@
 		<summary lang="en_GB">Synchronization with BetaSeries</summary>
 		<summary lang="fr_FR">Synchronisation avec BetaSeries</summary>
 		<description lang="en_GB">This service automatically updates your profile on BetaSeries when you have finished watching an episode or a movie on Kodi</description>
-		<description lang="fr_FR">Ce service met à jour automatiquement votre profil sur le site BetaSeries lorsque vous venez de finir de regarder un épisode ou nu film dans Kodi</description>
+		<description lang="fr_FR">Ce service met à jour automatiquement votre profil sur le site BetaSeries lorsque vous venez de finir de regarder un épisode ou un film dans Kodi</description>
 		<platform>all</platform>
 		<license>GPL-2.0-or-later</license>
 		<source>https://github.com/SansanLaTulipe/{{ addon_name }}</source>

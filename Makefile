@@ -4,7 +4,7 @@ ADDON_ASSET := $(ADDON_NAME)_$(ADDON_VERSION).zip
 
 KODI_VERSION := matrix
 
-all: clean lint test build
+all: lint test build
 
 build: clean
 	@echo "Create working directory"
@@ -14,11 +14,13 @@ build: clean
 	@(cd .build/$(ADDON_NAME) && rm -r behave.ini Dockerfile.dev Makefile resources/test/ pyproject.toml)
 	@find .build/$(ADDON_NAME) -type d -exec chmod u=rwx,go=rx {} +
 	@find .build/$(ADDON_NAME) -type f -exec chmod u=rw,go=r {} +
+	@sed -ze "s/.*\(v$(ADDON_VERSION)[^\n]*\n\(- \([^\n]\+\n\)\+\)\+\).*/\1/" changelog.txt > /tmp/changelog.txt
 	@sed -i .build/$(ADDON_NAME)/addon.xml \
 	    -e "s/{{ addon_name }}/$(ADDON_NAME)/" \
 	    -e "s/{{ addon_version }}/$(ADDON_VERSION)/" \
-	    -e "/{{ addon_changelog }}/r changelog.txt" \
-	    -e "s/^.*{{ addon_changelog }}/$(ADDON_VERSION) (`date +'%Y-%m-%d'`)/"
+	    -e "/{{ addon_changelog }}/r /tmp/changelog.txt" \
+	    -e "/{{ addon_changelog }}/d"
+	@rm /tmp/changelog.txt
 	@echo "Build addon asset"
 	@(cd .build/$(ADDON_NAME) && kodi-addon-checker --branch $(KODI_VERSION))
 	@(cd .build && zip -r $(ADDON_ASSET) $(ADDON_NAME))

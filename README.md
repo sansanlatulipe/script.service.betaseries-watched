@@ -9,13 +9,9 @@ It automatically updates your profile on BetaSeries when you watched an episode 
 
 ## Features
 
-- Synchronize watched movies between BetaSeries and Kodi library
-- Synchronize watched TV show episodes between BetaSeries and Kodi library
-
-### To do
-
-- Mark a movie as watched on BetaSeries when a video stream ends
-- Mark a TV show episode as watched on BetaSeries when a video stream ends
+- Full synchronization between BetaSeries and Kodi
+- Update watched status of movies and episodes on Kodi libraries when it is updated on BetaSeries
+- Update watched status of movies and episodes on BetaSeries when Kodi libraries are updated
 
 ## How it works
 
